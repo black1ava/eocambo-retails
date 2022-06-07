@@ -1,38 +1,60 @@
+import { useEffect } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import Header from './Component/Header';
 import Categories from './Component/Categories';
 import PopularProducts from './Component/PopularProduts';
 import RecommandedProducts from './Component/RecommandedProducts';
+import NavBar from './Component/NavBar';
+import { connect } from 'react-redux';
+import { toggleHomeMenuActive } from '../action';
 
-function Home(){
+function Home(props){
+
+  useEffect(function(){
+  props.toggleHomeMenuActive('home');
+  }, [props.toggleHomeMenuActive]);
+
   return (
     <View style={ styles.scrollView }>
       <Header />
-        <ScrollView>
+      <View style={{ ...styles.scrollView, ...styles.content  }}>
+        <ScrollView showsVerticalScrollIndicator={ false }>
           <View>
-            <View style={ styles.content }>
+            <View>
               <Categories />
             </View>
-            <View style={ styles.content }>
+            <View>
               <PopularProducts />
             </View>
-            <View style={ styles.content}>
+            <View>
               <RecommandedProducts />
             </View>
           </View>
         </ScrollView>
+        <NavBar />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   content: {
-    paddingHorizontal:15,
-    marginTop: 10
+    height: '100%',
+    marginHorizontal: 15
   },
   scrollView: {
-    flex: 1
+    flex: 1,
   }
 });
 
-export default Home;
+const mapDispatchToProps = {
+  toggleHomeMenuActive
+};
+
+function mapStateToProps(state){
+  return {
+    menus: state.menusActive
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

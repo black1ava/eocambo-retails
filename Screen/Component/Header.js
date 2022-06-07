@@ -1,0 +1,37 @@
+import { View, Image, StyleSheet } from 'react-native';
+import { Entypo, Feather } from '@expo/vector-icons'; 
+import SearchButton from '../../Shared/SearchButton';
+
+
+function Header(){
+  return(
+    <View style={ styles.header }>
+      <View style={ styles.headerSection }>
+        <Entypo name="menu" size={28} color="#4B7BE5" />
+        <Image style={ styles.logo } source={require('../../assets/eocambo.png')} />
+        <Feather name="shopping-cart" size={28} color="#4B7BE5" />
+      </View>
+      <SearchButton />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  header: {
+    backgroundColor: '#FFCC8F',
+    paddingVertical: 5,
+    paddingHorizontal: 15
+  },
+  logo: {
+    width: 150,
+    height: 60
+  },
+  headerSection: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginBottom: 5
+  }
+});
+
+export default Header;

@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { View, Text, FlatList, SafeAreaView } from 'react-native';
 import { globalStyles } from '../../styles/globalStyles';
 import { popularProducts } from '../../Shared/popularProducts';

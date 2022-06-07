@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, createContext } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import Header from './Component/Header';
 import Categories from './Component/Categories';
@@ -8,6 +8,8 @@ import NavBar from './Component/NavBar';
 import { connect } from 'react-redux';
 import { toggleHomeMenuActive, inactivateAllMenus } from '../action';
 
+export const NavigationContext = createContext();
+
 function Home(props){
 
   useEffect(function(){
@@ -16,25 +18,27 @@ function Home(props){
   }, [props.toggleHomeMenuActive, props.inactivateAllMenus]);
 
   return (
-    <View style={ styles.scrollView }>
-      <Header />
-      <View style={{ ...styles.scrollView, ...styles.content  }}>
-        <ScrollView showsVerticalScrollIndicator={ false }>
-          <View>
+    <NavigationContext.Provider value={{ navigation: props.navigation }}>
+      <View style={ styles.scrollView }>
+        <Header />
+        <View style={{ ...styles.scrollView, ...styles.content  }}>
+          <ScrollView showsVerticalScrollIndicator={ false }>
             <View>
-              <Categories />
+              <View>
+                <Categories />
+              </View>
+              <View>
+                <PopularProducts />
+              </View>
+              <View>
+                <RecommandedProducts />
+              </View>
             </View>
-            <View>
-              <PopularProducts />
-            </View>
-            <View>
-              <RecommandedProducts />
-            </View>
-          </View>
-        </ScrollView>
-        <NavBar navigation={ props.navigation } screenName="home"/>
+          </ScrollView>
+          <NavBar navigation={ props.navigation } screenName="home"/>
+        </View>
       </View>
-    </View>
+    </NavigationContext.Provider>
   );
 }
 

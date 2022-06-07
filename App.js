@@ -10,6 +10,7 @@ import Favorite from './Screen/Favourite';
 import Orders from './Screen/Orders';
 import Promotions from './Screen/Promotions';
 import Profile from './Screen/Profile';
+import ProductDetails from './Screen/ProductDetails';
 
 
 const Stack = createNativeStackNavigator();
@@ -56,6 +57,13 @@ export default function App() {
               component={ Profile }
               options={{
                 headerShown: false
+              }}
+            />
+            <Stack.Screen 
+              name="Product details"
+              component={ ProductDetails }
+              options={{
+                headerBackVisible: true
               }}
             />
           </Stack.Navigator>

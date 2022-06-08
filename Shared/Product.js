@@ -1,14 +1,10 @@
-import { useContext } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { globalStyles } from '../styles/globalStyles';
-import { NavigationContext } from '../Screen/Home';
-
 function Product(props){
 
-  const navigation = useContext(NavigationContext);
 
   function handlePress(){
-    navigation.navigation.navigate('Product details', { product: props });
+    props.navigation.navigate('Product details', props);
   }
 
   return(

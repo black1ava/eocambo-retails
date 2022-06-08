@@ -25,6 +25,7 @@
     "react-native-web": "0.17.7",
     "react-redux": "^8.0.2",
     "redux": "^4.2.0",
+    "redux-starter-kit": "^2.0.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

@@ -1,9 +1,15 @@
+import { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, LogBox } from 'react-native';
 import { Ionicons, Feather, MaterialIcons } from '@expo/vector-icons';
 import { globalStyles } from '../styles/globalStyles';
+import  { connect } from 'react-redux';
+import { addToFavoriteActive, addToFavoriteInactive } from '../action';
 
 function ProductDetails(props){
   const product = props.route.params;
+
+  const [isFavorite, setIsFavorite] = useState(product.favorite);
+
 
   LogBox.ignoreAllLogs();
 
@@ -11,6 +17,16 @@ function ProductDetails(props){
     if(props.navigation.canGoBack()){
       props.navigation.goBack();
     }
+  }
+
+  function handlAddToFavoritePress(){
+    if(product.favorite){
+      props.addToFavoriteInactive(product.id);
+    }else{
+      props.addToFavoriteActive(product.id);
+    }
+
+    setIsFavorite(current => !current);
   }
 
   return(
@@ -25,7 +41,9 @@ function ProductDetails(props){
       <View style={ styles.productInfo }>
         <View style={ styles.productHeader }>
           <Text style={{ ...styles.productName, ...globalStyles.title }}>{ product.name }</Text>
-          <MaterialIcons name="favorite-border"  size={ 38 } color="#4B7BE5" />
+          <TouchableOpacity onPress={ handlAddToFavoritePress }>
+            <MaterialIcons name="favorite-border"  size={ 38 } color={ isFavorite ? 'red' : '#4B7BE5' } />
+          </TouchableOpacity>
         </View>
         <View style={ styles.productBody }>
           <Text style={{ ...globalStyles.title, color: "#4B7BE5" }}>{ product.price }.00</Text>
@@ -89,4 +107,9 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ProductDetails;
+const mapDispatchToProps = {
+  addToFavoriteActive,
+  addToFavoriteInactive
+}
+
+export default connect(null, mapDispatchToProps)(ProductDetails);

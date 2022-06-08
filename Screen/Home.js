@@ -22,7 +22,7 @@ function Home(props){
               <PopularProducts navigation={ props.navigation }/>
             </View>
             <View>
-              <RecommandedProducts />
+              <RecommandedProducts navigation={ props.navigation }/>
             </View>
           </View>
         </ScrollView>

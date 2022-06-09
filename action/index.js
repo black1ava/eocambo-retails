@@ -1,11 +1,13 @@
-export function toggleHomeMenuActive(){
-  return { type: 'TOGGLE_HOME_MENU_ACTIVE' };
+export function addToFavoriteActive(payload){
+  return {
+    type: 'ADD_TO_FAVORITE_ACTIVE',
+    payload
+  };
 }
 
-export function toggleFavoriteMenuActive(){
-  return { type: 'TOGGLE_FAVORITE_MENU_ACTIVE' };
-}
-
-export function inactivateAllMenus(){
-  return { type: 'INACTIVATE_ALL_MENUS' }
+export function addToFavoriteInactive(payload){
+  return {
+    type: 'ADD_TO_FAVORITE_INACTIVE',
+    payload
+  };
 }

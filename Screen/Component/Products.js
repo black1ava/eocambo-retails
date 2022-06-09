@@ -1,16 +1,18 @@
-import { View, Text, FlatList, SafeAreaView } from 'react-native';
-import { globalStyles } from '../../styles/globalStyles';
-import { popularProducts } from '../../Shared/popularProducts';
+import { View, Text, FlatList } from 'react-native';
+
 import Product from '../../Shared/Product';
+import { globalStyles } from '../../styles/globalStyles';
 import Seperator from '../../Shared/Seperator';
 
-function PopularProducts(props){
+function Products(props){
 
   function renderProducts({ item }){
     return (<Product 
       source={ item.source }
       name={ item.name }
       price={ item.price }
+      id={ item.id }
+      favorite={ item.favorite }
       navigation={ props.navigation }
     />)
   }
@@ -21,19 +23,17 @@ function PopularProducts(props){
 
   return(
     <View>
-      <Text style={ globalStyles.title }>Popular Products</Text>
-      <SafeAreaView>
+      <Text style={ globalStyles.title }>{ props.title }</Text>
         <FlatList 
-          data={ popularProducts }
+          data={ props.products }
           renderItem={ renderProducts }
           keyExtractor={ extractProductKey }
           horizontal
           showsHorizontalScrollIndicator={ false }
           ItemSeparatorComponent={ Seperator }
         />
-      </SafeAreaView>
     </View>
   );
 }
 
-export default PopularProducts;
+export default Products;

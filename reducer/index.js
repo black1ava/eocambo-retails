@@ -1,34 +1,40 @@
+import { products } from '../Shared/products';
+
 let initialState= {
-  menusActive:{
-    home: false,
-    favorite: false
-  }
+  products
 }
 
 export default function reducer(state = initialState, action){
   switch(action.type){
-    case 'TOGGLE_HOME_MENU_ACTIVE':
+    case 'ADD_TO_FAVORITE_ACTIVE':
       return {
         ...state,
-        menusActive: {
-          ...state.menusActive,
-          home: true
-        }
-      }
+        products: state.products.map(function(product){
+          if(product.id === action.payload){
+            return {
+              ...product,
+              favorite: true
+            }
+          }
 
-    case 'TOGGLE_FAVORITE_MENU_ACTIVE':
-      return {
-        ...state,
-        menusActive: {
-          ...state.menusActive,
-          favorite: true
-        }
-      }
+          return product;
+        })
+      };
 
-    case 'INACTIVATE_ALL_MENUS':
-      return {
-        state: initialState
-      }
+      case 'ADD_TO_FAVORITE_INACTIVE':
+        return {
+          ...state,
+          products: state.products.map(function(product){
+            if(product.id === action.payload){
+              return {
+                ...product,
+                favorite: false
+              }
+            }
+
+            return product;
+          })
+        };
 
     default:
       return state;

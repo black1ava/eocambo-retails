@@ -12,8 +12,10 @@ function Categories(props){
 
   useEffect(function(){
     const sortedCategories = categories.sort(function(current, next){
-      return current.content > next.content;
+      return current.id[0].charCodeAt(0) - next.id[0].charCodeAt(0);
     })
+
+    console.log(sortedCategories);
     
     setSortedCategories(sortedCategories);
   }, [categories]);

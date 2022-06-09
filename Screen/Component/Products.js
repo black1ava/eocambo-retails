@@ -8,11 +8,7 @@ function Products(props){
 
   function renderProducts({ item }){
     return (<Product 
-      source={ item.source }
-      name={ item.name }
-      price={ item.price }
-      id={ item.id }
-      favorite={ item.favorite }
+      product={ item }
       navigation={ props.navigation }
     />)
   }

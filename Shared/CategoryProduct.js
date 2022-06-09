@@ -14,7 +14,12 @@ function CategoryProduct(props){
         <View style={ styles.product }>
           <Image style={ globalStyles.smallImage } source={{ uri: props.product.source }} />
           <View style={ styles.productInfoContainer }>
-            <Text style={{ ...globalStyles.textBold, ...globalStyles.mv10 }}>{ props.product.name }</Text>
+            <Text 
+              style={{ ...globalStyles.textBold, ...globalStyles.mv10 }}
+              numberOfLines={ 1 }
+            >
+              { props.product.name }
+            </Text>
             <Text style={ globalStyles.textBold }>
               Starting at: 
               <Text style={{ ...globalStyles.textBold, ...globalStyles.textRed }}>

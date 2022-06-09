@@ -8,7 +8,8 @@ export let products = [
     price: 249,
     category: 'ecommerce',
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -17,7 +18,8 @@ export let products = [
     price: 249,
     category: 'ecommerce',
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -26,7 +28,8 @@ export let products = [
     price: 249,
     category: 'tourism',
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -35,7 +38,8 @@ export let products = [
     price: 249,
     category: 'ecommerce',
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -44,7 +48,8 @@ export let products = [
     price: 249,
     category: 'ecommerce',
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -53,7 +58,8 @@ export let products = [
     price: 249,
     category: 'ecommerse',
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -62,7 +68,8 @@ export let products = [
     price: 249,
     category: 'design service-provider',
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -71,7 +78,8 @@ export let products = [
     price: 249,
     category: 'transportation',
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -80,7 +88,8 @@ export let products = [
     price: 249,
     category: 'education',
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -89,7 +98,8 @@ export let products = [
     price: 249,
     category: 'ecommerce',
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -98,7 +108,8 @@ export let products = [
     price: 249,
     category: 'cooking',
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -107,7 +118,8 @@ export let products = [
     price: 249,
     category: 'ecommerce',
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -116,7 +128,8 @@ export let products = [
     price: 249,
     category: 'gym',
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -125,7 +138,8 @@ export let products = [
     price: 249,
     category: 'ecommerce cooking',
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -134,7 +148,8 @@ export let products = [
     category: 'beauty-and-salon',
     price: 249,
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -143,7 +158,8 @@ export let products = [
     price: 249,
     category: 'pharmacy',
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -152,7 +168,8 @@ export let products = [
     price: 249,
     category: 'ecommerce cooking',
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -161,7 +178,8 @@ export let products = [
     category: 'consultancy-firm service-provider',
     price: 249,
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -170,7 +188,8 @@ export let products = [
     category: 'ecommerce pet',
     price: 249,
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -179,7 +198,8 @@ export let products = [
     category: 'ecommerce transportation',
     price: 249,
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -188,7 +208,8 @@ export let products = [
     category: 'ecommerce',
     price: 249,
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -197,7 +218,8 @@ export let products = [
     category: 'ecommerce pet',
     price: 249,
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -206,7 +228,8 @@ export let products = [
     category: 'ecommerce',
     price: 249,
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -215,7 +238,8 @@ export let products = [
     category: 'ecommerce',
     price: 249,
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -224,7 +248,8 @@ export let products = [
     category: 'service-provider',
     price: 249,
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -233,7 +258,8 @@ export let products = [
     category: 'ecommerce transportation',
     price: 249,
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -242,7 +268,8 @@ export let products = [
     category: 'ecommerce real-estate',
     favorite: false,
     price: 249,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -251,7 +278,8 @@ export let products = [
     category: 'design service-provider',
     price: 249,
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -260,7 +288,8 @@ export let products = [
     category: 'ecommerce transportation',
     price: 249,
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -269,7 +298,8 @@ export let products = [
     category: 'education service-provider',
     price: 249,
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -278,7 +308,8 @@ export let products = [
     category: 'ecommerse',
     price: 249,
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -288,6 +319,7 @@ export let products = [
     price: 249,
     favorite: false,
     inCart: false,
+    specialInstruction: '',
   },
   {
     id: uuidv4(),
@@ -296,7 +328,8 @@ export let products = [
     category: 'service-provider',
     price: 249,
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -305,7 +338,8 @@ export let products = [
     category: 'service-provider',
     price: 149,
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -314,7 +348,8 @@ export let products = [
     category: 'service-provider',
     price: 149,
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -323,7 +358,8 @@ export let products = [
     category: 'service-provider',
     price: 149,
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -332,7 +368,8 @@ export let products = [
     category: 'service-provider',
     price: 149,
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   },
   {
     id: uuidv4(),
@@ -342,6 +379,7 @@ export let products = [
     price: 149,
     favorite: false,
     inCart: false,
+    specialInstruction: '',
   },
   {
     id: uuidv4(),
@@ -350,6 +388,7 @@ export let products = [
     category: 'ecommerce',
     price: 149,
     favorite: false,
-    inCart: false
+    inCart: false,
+    specialInstruction: ''
   }
 ];

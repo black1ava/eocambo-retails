@@ -11,3 +11,17 @@ export function addToFavoriteInactive(payload){
     payload
   };
 }
+
+export function addToCartActive(payload){
+  return {
+    type: 'ADD_TO_CART_ACTIVE',
+    payload
+  };
+}
+
+export function addToCartInactive(payload){
+  return {
+    type: 'ADD_TO_CART_INACTIVE',
+    payload
+  };
+}

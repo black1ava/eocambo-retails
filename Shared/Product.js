@@ -10,7 +10,7 @@ function Product(props){
   return(
     <TouchableOpacity style={ styles.product } onPress={ handlePress }>
       <Image style={ globalStyles.smallImage } source={{ uri: props.source }}/>
-      <View style={ globalStyles.mh5 }>
+      <View style={{ ...globalStyles.mh5, ...styles.productInfo }}>
         <Text style={{ ...globalStyles.textBold, ...globalStyles.mv10 }}>{ props.name }</Text>
         <Text style={ globalStyles.textBold }>Starting at: 
           <Text style={{ ...globalStyles.textRed, marginLeft: 5 }}>
@@ -29,6 +29,11 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     overflow: 'hidden',
     width: 150
+  },
+  productInfo: {
+    flex: 1,
+    justifyContent: 'space-between',
+    paddingBottom: 10
   }
 });
 

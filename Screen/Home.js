@@ -1,13 +1,38 @@
+import { useState, useEffect } from 'react'
 import { View, StyleSheet, ScrollView } from 'react-native';
+import { connect } from 'react-redux';
 
 import Header from './Component/Header';
 import Categories from './Component/Categories';
-import PopularProducts from './Component/PopularProduts';
-import RecommandedProducts from './Component/RecommandedProducts';
 import NavBar from './Component/NavBar';
+import Products from './Component/Products';
 
 
 function Home(props){
+  const [popularProducts, setPopularProducts] = useState([]);
+  const [recommandedProducts, setRecommandedProducts] = useState([]);
+
+  useEffect(function(){
+    setPopularProducts(props.products.filter(function(product){
+      return (
+        product.name === 'Online Retail App' ||
+        product.name === 'Online Mini Mart' ||
+        product.name === 'Online Travel Agency' ||
+        product.name === 'Online Electronic Store' ||
+        product.name === 'Online Jewelry Store'
+      );
+    }));
+
+    setRecommandedProducts(props.products.filter(function(product){
+      return (
+        product.name === 'Online Retail App' ||
+        product.name === 'Online Mini Mart' ||
+        product.name === 'Furniture Online Store' ||
+        product.name === 'Fashion Design and Shopping App' ||
+        product.name === 'Parking App'
+      );
+    }));
+  }, [props.products]);
 
   return (
     <View style={ styles.scrollView }>
@@ -19,10 +44,10 @@ function Home(props){
               <Categories />
             </View>
             <View>
-              <PopularProducts navigation={ props.navigation }/>
+              <Products title="Popular Products" products={ popularProducts } navigation={ props.navigation }/>
             </View>
             <View>
-              <RecommandedProducts navigation={ props.navigation }/>
+            <Products title="Recommanded Products" products={ recommandedProducts } navigation={ props.navigation }/>
             </View>
           </View>
         </ScrollView>
@@ -42,4 +67,10 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Home;
+function mapStateToProps(state){
+  return {
+    products: state.products
+  };
+}
+
+export default connect(mapStateToProps)(Home);

@@ -13,18 +13,19 @@ function ScreenFrame(props){
   );
 
   return(
-    <View>
+    <View style={{ height: '100%' }}>
       <View style={ styles.header }>
-        <View style={ styles.row }>
-          <TouchableOpacity style={ styles.mr10 } onPress={ handleBackButton }>
-            <Ionicons  name="chevron-back-circle-outline" size={ 38 } color="#4B7BE5" />
-          </TouchableOpacity>
-          <Text style={{ ...globalStyles.title, ...styles.title }}>{ props.title }</Text>
-        </View>
+        <TouchableOpacity style={ styles.mr10 } onPress={ handleBackButton }>
+          <Ionicons  name="chevron-back-circle-outline" size={ 38 } color="#4B7BE5" />
+        </TouchableOpacity>
+        <Text style={{ ...globalStyles.title, ...styles.title }}>{ props.title }</Text>
         <View style={ styles.row }>
           { props.hasSearch && searchButtonMarkup }
           <Feather name="shopping-cart" size={30} color="#4B7BE5" />
         </View>
+      </View>
+      <View style={{ flex: 1 }}>
+        { props.children }
       </View>
     </View>
   );

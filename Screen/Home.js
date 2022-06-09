@@ -39,9 +39,9 @@ function Home(props){
       <Header navigation={ props.navigation }/>
       <View style={{ ...styles.scrollView, ...styles.content  }}>
         <ScrollView showsVerticalScrollIndicator={ false }>
-          <View>
+          <View style={ styles.scrollView }>
             <View>
-              <Categories />
+              <Categories navigation={ props.navigation } />
             </View>
             <View>
               <Products title="Popular Products" products={ popularProducts } navigation={ props.navigation }/>

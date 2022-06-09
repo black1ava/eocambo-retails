@@ -54,7 +54,7 @@ export const categories = [
     content: 'Transportation'
   },
   {
-    id: 'desgin',
+    id: 'design',
     icon: <MaterialIcons name="design-services" size={24} color="black" />,
     content: 'Design'
   },

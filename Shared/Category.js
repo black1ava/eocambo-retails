@@ -1,8 +1,13 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 function Category(props){
+
+  function handlePress(){
+    props.navigation.navigate("Categories", { id: props.id, name: props.content });
+  }
+
   return(
-    <TouchableOpacity style={ styles.category }>
+    <TouchableOpacity onPress={ handlePress } style={ styles.category }>
       <View style={ styles.categoryIcon }>
         { props.icon }
       </View>

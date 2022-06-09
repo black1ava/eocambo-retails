@@ -13,6 +13,7 @@ import Promotions from './Screen/Promotions';
 import Profile from './Screen/Profile';
 import ProductDetails from './Screen/ProductDetails';
 import Cart from './Screen/Cart';
+import Categories from './Screen/Categories';
 
 
 const Stack = createNativeStackNavigator();
@@ -71,6 +72,13 @@ export default function App() {
             <Stack.Screen 
               name="Cart"
               component={ Cart }
+              options={{
+                headerShown: false
+              }}
+            />
+            <Stack.Screen 
+              name="Categories"
+              component={ Categories }
               options={{
                 headerShown: false
               }}

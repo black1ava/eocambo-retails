@@ -6,7 +6,7 @@ import { categories } from '../../Shared/categories'
 import { globalStyles } from '../../styles/globalStyles'
 import Seperator from '../../Shared/Seperator';
 
-function Categories(){
+function Categories(props){
 
   const [sortedCategories, setSortedCategories] = useState([]);
 
@@ -20,9 +20,14 @@ function Categories(){
 
   // console.log(sortedCategories);
 
-  function renderCategory(props){
+  function renderCategory({ item }){
     return(
-      <Category icon={ props.item.icon } content={ props.item.content } />
+      <Category 
+      id={ item.id }
+      icon={ item.icon } 
+      content={ item.content } 
+      navigation={ props.navigation } 
+    />
     );
   }
 

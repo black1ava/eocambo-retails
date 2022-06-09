@@ -47,7 +47,7 @@ function ProductDetails(props){
         </View>
         <View style={ styles.productBody }>
           <Text style={{ ...globalStyles.title, color: "#4B7BE5" }}>{ product.price }.00</Text>
-          <View style={ styles.addToCartButtonContainer }>
+          <View style={ styles.buttonGroup }>
             <TouchableOpacity style={ styles.addToCartButton }>
               <Text style={ styles.addToCartButtonText }>Add To Cart</Text>
             </TouchableOpacity>
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 15
   },
-  addToCartButtonContainer: {
+  buttonGroup: {
     alignItems: 'center'
   },
   addToCartButton: {

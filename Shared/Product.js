@@ -6,7 +6,7 @@ function Product(props){
   function handlePress(){
     props.navigation.navigate('Product details', props);
   }
-
+  
   return(
     <TouchableOpacity style={ styles.product } onPress={ handlePress }>
       <Image style={ globalStyles.smallImage } source={{ uri: props.source }}/>
@@ -14,7 +14,7 @@ function Product(props){
         <Text style={{ ...globalStyles.textBold, ...globalStyles.mv10 }}>{ props.name }</Text>
         <Text style={ globalStyles.textBold }>Starting at: 
           <Text style={{ ...globalStyles.textRed, marginLeft: 5 }}>
-            { props.price }
+            ${ props.price }.00
           </Text>
         </Text>
       </View>

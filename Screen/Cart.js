@@ -4,7 +4,9 @@ import ScreenFrame from './Component/ScreenFrame';
 function Cart(props){
   return(
     <View>
-      <ScreenFrame navigation={ props.navigation } title="Your cart"  hasSearch />
+      <ScreenFrame navigation={ props.navigation } title="Cart"  hasSearch>
+        
+      </ScreenFrame>
     </View>
   );
 }

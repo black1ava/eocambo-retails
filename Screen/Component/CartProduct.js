@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     width: 140,
     height: 140,
     borderRadius: 5,
+    marginRight: 10
   },
   container: {
     flexDirection: 'row',
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
     borderColor: 'lightgrey',
     marginBottom: 10,
     padding: 2,
-    borderRadius: 5
+    borderRadius: 5,
   },
   name: {
     fontWeight: 'bold'

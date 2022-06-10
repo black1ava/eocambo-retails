@@ -1,8 +1,18 @@
+import { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons, AntDesign, Feather } from '@expo/vector-icons';
+import { connect } from 'react-redux';
+
 import { globalStyles } from '../../styles/globalStyles';
 
+
 function ScreenFrame(props){
+
+  const [productsInCart, setProductsInCart] = useState(0);
+
+  useEffect(function(){
+    setProductsInCart(props.productsInCart.length);
+  }, [props.productsInCart]);
 
   function handleBackButton(){
     props.navigation.goBack();
@@ -10,6 +20,16 @@ function ScreenFrame(props){
 
   const searchButtonMarkup = (
     <AntDesign style={ styles.mr10 } name="search1" size={30} color="#4B7BE5" />
+  );
+  
+  function handleToCartPress(){
+    props.navigation.navigate('Cart');
+  }
+
+  const inCartTextMarkeup = (
+    <View style={ styles.inCartContainer }>
+      <Text style={ styles.inCartText }>{ productsInCart }</Text>
+    </View>
   );
 
   return(
@@ -21,10 +41,13 @@ function ScreenFrame(props){
         <Text style={{ ...globalStyles.title, ...styles.title }}>{ props.title }</Text>
         <View style={ styles.row }>
           { props.hasSearch && searchButtonMarkup }
-          <Feather name="shopping-cart" size={30} color="#4B7BE5" />
+          <TouchableOpacity onPress={ handleToCartPress }>
+            <Feather name="shopping-cart" size={30} color="#4B7BE5" />
+            { productsInCart > 0 && inCartTextMarkeup }
+          </TouchableOpacity>
         </View>
       </View>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, padding: 15 }}>
         { props.children }
       </View>
     </View>
@@ -49,7 +72,28 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22
+  },
+  inCartContainer: {
+    backgroundColor: '#FF5D5D',
+    alignItems: 'center',
+    justifyContent:'center',
+    borderRadius: 300,
+    width: 15,
+    height: 15,
+    position: 'absolute',
+    right: -5,
+    top: 0
+  },
+  inCartText: {
+    fontSize: 10,
+    color: '#fff'
   }
 });
 
-export default ScreenFrame;
+function mapStateToProps(state){
+  return {
+    productsInCart: state.productsInCart
+  };
+}
+
+export default connect(mapStateToProps)(ScreenFrame);

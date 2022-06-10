@@ -9,7 +9,7 @@ function Product(props){
   
   return(
     <TouchableOpacity style={ styles.product } onPress={ handlePress }>
-      <Image style={ globalStyles.smallImage } source={{ uri: props.product.source }}/>
+      <Image style={ globalStyles.smallImage } source={{ uri: props.product.uri }}/>
       <View style={{ ...globalStyles.mh5, ...styles.productInfo }}>
         <Text 
           style={{ ...globalStyles.textBold, ...globalStyles.mv10 }} 
@@ -19,7 +19,7 @@ function Product(props){
         </Text>
         <Text style={ globalStyles.textBold }>Starting at: 
           <Text style={{ ...globalStyles.textRed, marginLeft: 5 }}>
-            ${ props.product.price }.00
+            ${ parseInt(props.product.price) }.00
           </Text>
         </Text>
       </View>

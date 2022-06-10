@@ -12,7 +12,7 @@ function CategoryProduct(props){
     <View>
       <TouchableOpacity onPress={ handlePress }>
         <View style={ styles.product }>
-          <Image style={ globalStyles.smallImage } source={{ uri: props.product.source }} />
+          <Image style={ globalStyles.smallImage } source={{ uri: props.product.uri }} />
           <View style={ styles.productInfoContainer }>
             <Text 
               style={{ ...globalStyles.textBold, ...globalStyles.mv10 }}
@@ -23,7 +23,7 @@ function CategoryProduct(props){
             <Text style={ globalStyles.textBold }>
               Starting at: 
               <Text style={{ ...globalStyles.textBold, ...globalStyles.textRed }}>
-                ${ props.product.price }.00
+                ${ parseInt(props.product.price) }.00
               </Text>
             </Text>
           </View>

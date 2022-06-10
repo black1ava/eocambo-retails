@@ -1,3 +1,10 @@
+export function addProducts(payload){
+  return {
+    type: 'ADD_PRODUCTS',
+    payload
+  };
+}
+
 export function addToFavoriteActive(payload){
   return {
     type: 'ADD_TO_FAVORITE_ACTIVE',

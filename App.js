@@ -17,7 +17,13 @@ import Categories from './Screen/Categories';
 
 
 const Stack = createNativeStackNavigator();
-const store = configureStore({ reducer });
+const store = configureStore({ 
+  reducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+    immutableCheck: false,
+    serializableCheck: false,
+  })
+});
 
 export default function App() {
   return (

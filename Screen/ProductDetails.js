@@ -16,13 +16,10 @@ function ProductDetails(props){
   const [productsInCart, setProductsInCart] = useState(0);
   const [amount, setAmount] = useState(1);
 
-
   LogBox.ignoreAllLogs();
 
   useEffect(function(){
-    setProductsInCart(props.productsInCart.reduce(function(acc, cur){
-      return acc + cur.amount
-    }, 0));    
+    setProductsInCart(props.productsInCart.length);    
   }, [props.productsInCart]);
 
   function handleAmountIncrease(){
@@ -68,7 +65,7 @@ function ProductDetails(props){
 
   return(
     <View style={ globalStyles.content }>
-      <Image style={ styles.image } source={{ uri: product.source }}/>
+      <Image style={ styles.image } source={{ uri: product.uri }}/>
       <TouchableOpacity onPress={ handlePress } style={ styles.backButton } >
         <Ionicons  name="chevron-back-circle-outline" size={ 38 } color="#4B7BE5" />
       </TouchableOpacity>
@@ -84,7 +81,7 @@ function ProductDetails(props){
           </TouchableOpacity>
         </View>
         <View style={ styles.productBody }>
-          <Text style={{ ...globalStyles.title, color: "#4B7BE5" }}>{ product.price }.00</Text>
+          <Text style={{ ...globalStyles.title, color: "#4B7BE5" }}>{ parseInt(product.price) }.00</Text>
           <View>
             <View style={ styles.instructions }>
               <Text>Special instructions:</Text>
@@ -189,7 +186,8 @@ const styles = StyleSheet.create({
   },
   amountText: {
     marginHorizontal: 5,
-    fontSize: 22
+    fontSize: 22, 
+    fontWeight: 'bold'
   }
 });
 

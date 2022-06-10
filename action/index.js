@@ -12,16 +12,17 @@ export function addToFavoriteInactive(payload){
   };
 }
 
-export function addToCartActive(payload){
+export function addToCart({ productId, amount }){
   return {
-    type: 'ADD_TO_CART_ACTIVE',
-    payload
+    type: 'ADD_TO_CART',
+    productId,
+    amount
   };
 }
 
-export function addToCartInactive(payload){
+export function removeFromCart(payload){
   return {
-    type: 'ADD_TO_CART_INACTIVE',
+    type: 'REMOVE_FROM_CART',
     payload
   };
 }

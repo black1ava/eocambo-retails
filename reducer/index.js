@@ -38,29 +38,20 @@ export default function reducer(state = initialState, action){
           })
         };
 
-      case 'ADD_TO_CART_ACTIVE':
+      case 'ADD_TO_CART':
         return {
           ...state,
-          products: state.products.map(function(product){
-            if(product.id === action.payload){
-              return {
-                ...product,
-                inCart: true
-              };
-            }
-
-            return product;
-          }),
           productsInCart: [
             ...state.productsInCart,
             {
               id: uuidv4(),
-              product_id: action.payload
+              productId: action.productId,
+              amount: action.amount
             }
           ]
         };
 
-        case 'ADD_TO_CART_INACTIVE':
+        case 'REMOVE_FROM_CART':
           return {
             ...state,
             products: state.products.map(function(product){

@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
   menuSection: {
     backgroundColor: '#fff',
     marginHorizontal: 0,
+    marginTop: 10
   },
   navbarSection: {
     paddingHorizontal: 15

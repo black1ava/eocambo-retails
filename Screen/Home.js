@@ -11,6 +11,13 @@ import Products from './Component/Products';
 function Home(props){
   const [popularProducts, setPopularProducts] = useState([]);
   const [recommandedProducts, setRecommandedProducts] = useState([]);
+  const [numberProductsInCart, setNumberProductsInCart] = useState(0);
+
+  useEffect(function(){
+    setNumberProductsInCart(props.productsInCart.reduce(function(acc, cur){
+      return acc + cur.amount
+    }, 0)); 
+  }, [props.productsInCart]);
 
   useEffect(function(){
     setPopularProducts(props.products.filter(function(product){
@@ -36,7 +43,7 @@ function Home(props){
 
   return (
     <View style={ styles.scrollView }>
-      <Header navigation={ props.navigation }/>
+      <Header navigation={ props.navigation } numberInCart={ numberProductsInCart}/>
       <View style={{ ...styles.scrollView, ...styles.content  }}>
         <ScrollView showsVerticalScrollIndicator={ false }>
           <View style={ styles.scrollView }>
@@ -69,7 +76,8 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state){
   return {
-    products: state.products
+    products: state.products,
+    productsInCart: state.productsInCart
   };
 }
 

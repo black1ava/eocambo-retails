@@ -10,7 +10,6 @@ function Categories(props){
   const [products, setProducts] = useState([]);
   const { id } = props.route.params;
   const { name } = props.route.params;
-  // console.log(id);
 
   useEffect(function(){
     setProducts(props.products.filter(function(product){

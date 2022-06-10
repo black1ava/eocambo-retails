@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, LogBox, TextInput } from 'react-native';
-import { Ionicons, Feather, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, Feather, MaterialIcons, AntDesign } from '@expo/vector-icons';
 import { globalStyles } from '../styles/globalStyles';
 import  { connect } from 'react-redux';
 import { 
   addToFavoriteActive, 
   addToFavoriteInactive, 
-  addToCartActive,
-  addToCartInactive
+  addToCart,
 } from '../action';
 
 function ProductDetails(props){
@@ -15,13 +14,26 @@ function ProductDetails(props){
 
   const [isFavorite, setIsFavorite] = useState(product.favorite);
   const [productsInCart, setProductsInCart] = useState(0);
+  const [amount, setAmount] = useState(1);
 
 
   LogBox.ignoreAllLogs();
 
   useEffect(function(){
-    setProductsInCart(props.productsInCart.length);
+    setProductsInCart(props.productsInCart.reduce(function(acc, cur){
+      return acc + cur.amount
+    }, 0));    
   }, [props.productsInCart]);
+
+  function handleAmountIncrease(){
+    setAmount(amount => amount + 1);
+  }
+
+  function handleAmountDecrease(){
+    if(amount > 1){
+      setAmount(amount => amount - 1);
+    }
+  }
 
 
   function handlePress(){
@@ -41,7 +53,11 @@ function ProductDetails(props){
   }
 
   function handleAddToCart(){
-    props.addToCartActive(product.id);
+    props.addToCart({ productId: product.id, amount });
+  }
+
+  function handleNavigateToCart(){
+    props.navigation.navigate('Cart');
   }
 
   const numberInCartMarkup = (
@@ -56,7 +72,7 @@ function ProductDetails(props){
       <TouchableOpacity onPress={ handlePress } style={ styles.backButton } >
         <Ionicons  name="chevron-back-circle-outline" size={ 38 } color="#4B7BE5" />
       </TouchableOpacity>
-      <TouchableOpacity style={  styles.goToCartButton }>
+      <TouchableOpacity style={ styles.goToCartButton } onPress={ handleNavigateToCart }>
         <Feather name="shopping-cart" size={28} color="#4B7BE5" />
         { productsInCart > 0 && numberInCartMarkup }
       </TouchableOpacity>
@@ -77,6 +93,15 @@ function ProductDetails(props){
               </View>
             </View>
             <View style={ styles.buttonGroup }>
+            <View style={ styles.setAmount }>
+              <TouchableOpacity onPress={ handleAmountDecrease }>
+                <AntDesign name="minuscircleo" size={28} color="black" />
+              </TouchableOpacity>
+              <Text style={ styles.amountText }>{ amount }</Text>
+              <TouchableOpacity onPress={ handleAmountIncrease }>
+                <AntDesign name="pluscircleo"  size={28} color="black" />
+              </TouchableOpacity>
+            </View>
               <TouchableOpacity style={ styles.addToCartButton } onPress={ handleAddToCart }>
                 <Text style={ styles.addToCartButtonText }>Add To Cart</Text>
               </TouchableOpacity>
@@ -135,9 +160,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white'
   },
-  instructions: {
-    marginBottom: 10,
-  },
   instructionsInput: {
     shadowColor: 'rgba(0, 0, 0, 1)',
     shadowOpacity: 1,
@@ -153,12 +175,21 @@ const styles = StyleSheet.create({
     width: 15,
     height: 15,
     position: 'absolute',
-    right: 0,
+    right: -5,
     top: 0
   },
   inCart: {
     color: '#ffffff',
     fontSize: 10,
+  },
+  setAmount: {
+    flexDirection: 'row',
+    marginVertical: 15,
+    alignItems: 'center'
+  },
+  amountText: {
+    marginHorizontal: 5,
+    fontSize: 22
   }
 });
 
@@ -171,8 +202,7 @@ function mapStateToProps(state){
 const mapDispatchToProps = {
   addToFavoriteActive,
   addToFavoriteInactive,
-  addToCartActive,
-  addToCartInactive
+  addToCart,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductDetails);

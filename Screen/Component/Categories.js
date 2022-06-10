@@ -14,13 +14,9 @@ function Categories(props){
     const sortedCategories = categories.sort(function(current, next){
       return current.id[0].charCodeAt(0) - next.id[0].charCodeAt(0);
     })
-
-    console.log(sortedCategories);
     
     setSortedCategories(sortedCategories);
   }, [categories]);
-
-  // console.log(sortedCategories);
 
   function renderCategory({ item }){
     return(

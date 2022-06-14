@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native'
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
+import { connect } from 'react-redux';
+
+import { increaseProductInCart, decreaseProductInCart } from '../../action/';
 
 function CartProduct(props){
   const [amount, setAmount] = useState(props.amount);
@@ -12,11 +15,13 @@ function CartProduct(props){
 
   function handleAmountDecrease(){
     if(amount > 1){
+      props.decreaseProductInCart(props.id);
       setAmount(amount => amount - 1 );
     }
   }
 
   function handleAmountIncrease(){
+    props.increaseProductInCart(props.id);
     setAmount(amount => amount + 1 );
   }
 
@@ -28,7 +33,11 @@ function CartProduct(props){
         <Text style={ styles.price }>${ parseInt(totalPrice) }.00</Text>
       </View>
       <View style={{ alignItems: 'flex-end', flex: 1, justifyContent: 'space-between' }}>
-        <AntDesign name="closecircle" size={24} color="red" />
+        <View style={ styles.closeButton }>
+          <TouchableOpacity onPress={ props.onClose }>
+          <Ionicons name="close" size={22} color="white" />
+          </TouchableOpacity>
+        </View>
         <View style={ styles.setAmount }>
           <TouchableOpacity onPress={ handleAmountDecrease }>
             <AntDesign name="minuscircleo" size={24} color="black" />
@@ -48,15 +57,17 @@ const styles = StyleSheet.create({
     width: 140,
     height: 140,
     borderRadius: 5,
-    marginRight: 10
+    marginRight: 10,
+    marginVertical: 2,
+    marginLeft: 2
   },
   container: {
     flexDirection: 'row',
     borderWidth: 1.5,
     borderColor: 'lightgrey',
     marginBottom: 10,
-    padding: 2,
     borderRadius: 5,
+    position: 'relative'
   },
   name: {
     fontWeight: 'bold'
@@ -66,13 +77,26 @@ const styles = StyleSheet.create({
     color: 'red'
   },
   setAmount: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: 0,
+    right: 5
   },
   amountText: {
     marginHorizontal: 5,
     fontSize: 18,
     fontWeight: 'bold'
+  },
+  closeButton: {
+    backgroundColor: 'red',
+    borderRadius: 100,
+    position: 'absolute'
   }
 });
 
-export default CartProduct;
+const mapDispatchToProps = {
+  increaseProductInCart,
+  decreaseProductInCart
+};
+
+export default connect(null, mapDispatchToProps)(CartProduct);

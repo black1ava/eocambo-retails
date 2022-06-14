@@ -33,3 +33,17 @@ export function removeFromCart(payload){
     payload
   };
 }
+
+export function increaseProductInCart(payload){
+  return {
+    type: 'INCREASE_PRODUCT_IN_CART',
+    payload
+  };
+};
+
+export function decreaseProductInCart(payload){
+  return {
+    type: 'DECREASE_PRODUCT_IN_CART',
+    payload
+  };
+};

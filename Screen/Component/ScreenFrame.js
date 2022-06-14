@@ -47,7 +47,7 @@ function ScreenFrame(props){
           </TouchableOpacity>
         </View>
       </View>
-      <View style={{ flex: 1, padding: 15 }}>
+      <View style={{ flex: 1 }}>
         { props.children }
       </View>
     </View>

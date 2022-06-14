@@ -75,18 +75,38 @@ export default function reducer(state = initialState, action){
         case 'REMOVE_FROM_CART':
           return {
             ...state,
-            products: state.products.map(function(product){
-              if(product.id === action.payload){
+            productsInCart: state.productsInCart.filter(function(product){
+              return product.id !==  action.payload
+            })
+          };
+
+        case 'INCREASE_PRODUCT_IN_CART':
+          return {
+            ...state,
+            productsInCart: state.productsInCart.map(function(productInCart){
+              if(productInCart.id === action.payload){
                 return {
-                  ...product,
-                  inCart: false
+                  ...productInCart,
+                  amount: productInCart.amount + 1
                 };
               }
 
-              return product;
-            }),
-            productsInCart: state.productsInCart.filter(function(product){
-              return product.id !==  payload
+              return productInCart;
+            })
+          };
+
+        case 'DECREASE_PRODUCT_IN_CART':
+          return {
+            ...state,
+            productsInCart: state.productsInCart.map(function(productInCart){
+              if(productInCart.id === action.payload){
+                return {
+                  ...productInCart,
+                  amount: productInCart.amount - 1
+                };
+              }
+
+              return productInCart;
             })
           };
 

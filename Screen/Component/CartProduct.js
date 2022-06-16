@@ -25,30 +25,36 @@ function CartProduct(props){
     setAmount(amount => amount + 1 );
   }
 
+  function handlePress(){
+    props.navigation.navigate('Product details', props.product);
+  }
+
   return (
-    <View style={ styles.container }>
-      <Image style={ styles.smallImage } source={{ uri: props.product.uri }}/>
-      <View style={{ width: '30%', justifyContent: 'space-between', paddingVertical: 20  }}>
-        <Text numberOfLines={ 3 } style={ styles.name }>{ props.product.name }</Text>
-        <Text style={ styles.price }>${ parseInt(totalPrice) }.00</Text>
+    <TouchableOpacity onPress={ handlePress }>
+      <View style={ styles.container }>
+          <Image style={ styles.smallImage } source={{ uri: props.product.uri }}/>
+          <View style={{ width: '30%', justifyContent: 'space-between', paddingVertical: 20  }}>
+            <Text numberOfLines={ 3 } style={ styles.name }>{ props.product.name }</Text>
+            <Text style={ styles.price }>${ parseInt(totalPrice) }.00</Text>
+          </View>
+          <View style={{ alignItems: 'flex-end', flex: 1, justifyContent: 'space-between' }}>
+            <View style={ styles.closeButton }>
+              <TouchableOpacity onPress={ props.onClose }>
+              <Ionicons name="close" size={22} color="white" />
+              </TouchableOpacity>
+            </View>
+            <View style={ styles.setAmount }>
+              <TouchableOpacity onPress={ handleAmountDecrease }>
+                <AntDesign name="minuscircleo" size={24} color="black" />
+              </TouchableOpacity>
+              <Text style={ styles.amountText }>{ amount }</Text>
+              <TouchableOpacity onPress={ handleAmountIncrease }>
+                <AntDesign name="pluscircleo"  size={24} color="black" />
+              </TouchableOpacity>
+            </View>
+          </View>
       </View>
-      <View style={{ alignItems: 'flex-end', flex: 1, justifyContent: 'space-between' }}>
-        <View style={ styles.closeButton }>
-          <TouchableOpacity onPress={ props.onClose }>
-          <Ionicons name="close" size={22} color="white" />
-          </TouchableOpacity>
-        </View>
-        <View style={ styles.setAmount }>
-          <TouchableOpacity onPress={ handleAmountDecrease }>
-            <AntDesign name="minuscircleo" size={24} color="black" />
-          </TouchableOpacity>
-          <Text style={ styles.amountText }>{ amount }</Text>
-          <TouchableOpacity onPress={ handleAmountIncrease }>
-            <AntDesign name="pluscircleo"  size={24} color="black" />
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

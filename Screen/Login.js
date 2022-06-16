@@ -35,7 +35,7 @@ function Login(props){
   });
 
   const [googleRequest, googleResponse, googlePromptAsync] = Google.useIdTokenAuthRequest({
-    clientId: '485406201376-2j2ng3k9bm3a7ldnbdrolkh37rbrcokb.apps.googleusercontent.com'
+    clientId: '858605708808-65v33u0upm5k9un1phi32rt9obkh4tcf.apps.googleusercontent.com'
   });
 
   function handlePhoneNumberChange(value){

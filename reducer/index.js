@@ -3,7 +3,8 @@ import { v4 as uuidv4 } from 'uuid';
 let initialState= {
   products: [],
   productsInCart: [],
-  user: null
+  user: null,
+  total: 0
 }
 
 export default function reducer(state = initialState, action){
@@ -54,9 +55,26 @@ export default function reducer(state = initialState, action){
             {
               id: uuidv4(),
               productId: action.productId,
-              amount: action.amount
+              amount: action.amount,
+              order: false
             }
           ]
+        };
+
+
+      case 'UPDATE_TO_CART':
+        return {
+          ...state,
+          productsInCart: state.productsInCart.map(function(productInCart){
+            if(productInCart.id === action.id){
+              return {
+                ...productInCart,
+                amount: action.amount
+              };
+            }
+
+            return productInCart
+          })
         };
 
         case 'REMOVE_FROM_CART':
@@ -101,6 +119,23 @@ export default function reducer(state = initialState, action){
           return {
             ...state,
             user: action.payload
+          };
+
+        case 'SET_TOTAL':
+          return {
+            ...state,
+            total: action.payload
+          };
+
+        case 'ORDER_PRODUCTS_IN_CART':
+          return {
+            ...state,
+            productsInCart: state.productsInCart.map(function(productInCart){
+              return {
+                ...productInCart,
+                order: true
+              }
+            })
           };
 
     default:

@@ -1,19 +1,21 @@
 import { useState, useEffect } from 'react';
 import { View, FlatList, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import { removeFromCart } from '../action';
+import { removeFromCart, setTotal } from '../action';
 
 import ScreenFrame from './Component/ScreenFrame';
 import CartProduct from './Component/CartProduct';
+import { globalStyles } from '../styles/globalStyles';
 
 function Cart(props){
 
   const [products, setProducts] = useState([]);
-  const [total, setTotal] = useState(0);
 
   useEffect(function(){
 
-    const products = props.productsInCart.map(function(productInCart){
+    const products = props.productsInCart
+      .filter(product => !product.order)
+      .map(function(productInCart){
       return {
         id: productInCart.id,
         product: props.products.find(function(product){
@@ -25,11 +27,13 @@ function Cart(props){
 
     setProducts(products);
 
-    setTotal(products.map(function(item){
+    const total = products.map(function(item){
       return { price: item.product.price, amount: item.amount }
     }).reduce(function(acc, curr){
       return acc + parseInt(curr.price) * curr.amount;
-    }, 0));
+    }, 0);
+
+    props.setTotal(total);
   
   }, [props.productsInCart, props.products, props.productsInCart.amount]);
 
@@ -46,6 +50,7 @@ function Cart(props){
       product={ item.product } 
       amount={ item.amount } 
       onClose={ () => handleClose(item.id) } 
+      navigation={ props.navigation }
       id={ item.id }
     />
   }
@@ -54,7 +59,7 @@ function Cart(props){
     return product.id
   }
 
-  return(
+  const cartScreenMarkup = (
     <View style={{ flex: 1 }}>
       <ScreenFrame navigation={ props.navigation } title="Cart"  hasSearch>
         <View style={{ padding: 15, flex: 1 }}>
@@ -70,7 +75,7 @@ function Cart(props){
               Total: 
             </Text>
             <Text style={ styles.totalPrice }>
-              ${ total }.00
+              ${ props.total }.00
             </Text>
           </View>
           <View style={ styles.checkoutButton }>
@@ -82,7 +87,23 @@ function Cart(props){
       </ScreenFrame>
     </View>
   );
-  }
+
+  return(
+    <>
+    {
+      products.length === 0 ? (
+        <ScreenFrame navigation={ props.navigation } title="Cart"  hasSearch>
+          <View style={ globalStyles.center }>
+            <Text style={{ ...globalStyles.textBold, ...globalStyles.title }}>No item in cart</Text>
+          </View>
+        </ScreenFrame>
+      ) :(
+        cartScreenMarkup
+      )
+    }
+    </>
+  );
+}
 
 const styles = StyleSheet.create({
   total: {
@@ -128,12 +149,14 @@ const styles = StyleSheet.create({
 function mapStateToProps(state){
   return {
     productsInCart: state.productsInCart,
-    products: state.products
+    products: state.products,
+    total: state.total
   };
 }
 
 const mapDispatchToProps = {
-  removeFromCart
+  removeFromCart,
+  setTotal
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Cart);

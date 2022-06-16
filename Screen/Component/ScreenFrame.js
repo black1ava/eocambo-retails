@@ -11,7 +11,7 @@ function ScreenFrame(props){
   const [productsInCart, setProductsInCart] = useState(0);
 
   useEffect(function(){
-    setProductsInCart(props.productsInCart.length);
+    setProductsInCart(props.productsInCart.filter(product => !product.order).length);
   }, [props.productsInCart]);
 
   function handleBackButton(){

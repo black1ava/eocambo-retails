@@ -39,6 +39,7 @@ function Home(props){
           favorite: product.is_favorites,
           popular: product.is_popular,
           recommend: product.is_recommend,
+          description: product.description,
           uri: product.image === null ? 'https://pos.eocambo.com/img/default.png' : `https://pos.eocambo.com/uploads/img/${ product.image }`
         };
       }));
@@ -71,7 +72,7 @@ function Home(props){
   }, [props.products]);
 
   useEffect(function(){
-    setNumberProductsInCart(props.productsInCart.length); 
+    setNumberProductsInCart(props.productsInCart.filter(product => !product.order).length); 
   }, [props.productsInCart]);
   
   const handleLayout = useCallback(async function(){

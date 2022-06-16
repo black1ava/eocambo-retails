@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, LogBox, TextInput } from 'react-native';
+import { 
+  View, 
+  Text, 
+  Image, 
+  StyleSheet, 
+  TouchableOpacity, 
+  LogBox, 
+  TextInput, 
+  ScrollView 
+} from 'react-native';
 import { Ionicons, Feather, MaterialIcons, AntDesign } from '@expo/vector-icons';
 import { globalStyles } from '../styles/globalStyles';
 import  { connect } from 'react-redux';
@@ -7,19 +16,35 @@ import {
   addToFavoriteActive, 
   addToFavoriteInactive, 
   addToCart,
+  updateToCart
 } from '../action';
 
 function ProductDetails(props){
   const product = props.route.params;
+  // console.log(props.productsInCart);
 
   const [isFavorite, setIsFavorite] = useState(product.favorite);
   const [productsInCart, setProductsInCart] = useState(0);
   const [amount, setAmount] = useState(1);
+  const [isSelected, setIsSelected] = useState(false);
+  const [productInCartId, setProductInCartId] = useState(null);
 
   LogBox.ignoreAllLogs();
 
+  function handleIsSelected(){
+    setIsSelected(true);
+  }
+
   useEffect(function(){
-    setProductsInCart(props.productsInCart.length);    
+    setProductsInCart(props.productsInCart.filter(product => !product.order).length);
+
+    const productInCart = props.productsInCart.find(function(productInCart){
+      return productInCart.productId === product.id;
+    });
+
+    setAmount(!!productInCart ? productInCart.amount : 1);
+    setProductInCartId(productInCart?.id);
+    setIsSelected(!!productInCart);
   }, [props.productsInCart]);
 
   function handleAmountIncrease(){
@@ -50,7 +75,19 @@ function ProductDetails(props){
   }
 
   function handleAddToCart(){
-    props.addToCart({ productId: product.id, amount });
+
+    if(!isSelected){
+      alert('Please select an option price');
+      return;
+    }
+
+    if(!!productInCartId){
+      props.updateToCart({ id: productInCartId, amount });
+    }else{
+      props.addToCart({ productId: product.id, amount });
+    }
+
+    props.navigation.navigate('Cart');
   }
 
   function handleNavigateToCart(){
@@ -61,6 +98,12 @@ function ProductDetails(props){
     <View style={ styles.inCartContainer }>
       <Text style={ styles.inCart }>{ productsInCart }</Text>
     </View>
+  );
+
+  const radioButtonMarkup = isSelected ? (
+    <Ionicons name="radio-button-on" size={24} color="#0AA1DD" />
+    ) : (
+    <Ionicons name="radio-button-off" size={24} color="#0AA1DD" />
   );
 
   return(
@@ -83,7 +126,28 @@ function ProductDetails(props){
           </TouchableOpacity>
         </View>
         <View style={ styles.productBody }>
-          <Text style={{ ...globalStyles.title, color: "#4B7BE5" }}>{ parseInt(product.price) }.00</Text>
+          <Text style={{ ...globalStyles.title, ...globalStyles.textRed }}>${ parseInt(product.price) }.00</Text>
+          <Text style={ globalStyles.textBold }>Description</Text>
+          <ScrollView showsVerticalScrollIndicator={ false }>
+            <Text>{ product.description || 'null' }</Text>
+          </ScrollView>
+          <View>
+            <View style={ styles.selectedOptionsHeader}>
+              <Text style={ globalStyles.textBold }>Select options</Text>
+              <Text style={ globalStyles.textBold}>01 required</Text>
+            </View>
+            <View style={ styles.radioButton }>
+              <TouchableOpacity onPress={ handleIsSelected }>
+                <View style={ styles.radioContent }>
+                    <View style={ styles.selectedName }>
+                      { radioButtonMarkup }
+                      <Text>Normal</Text>
+                    </View>
+                    <Text style={ globalStyles.textRed }>${ parseInt(product.price) }.00</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
           <View>
             <View style={ styles.instructions }>
               <Text>Special instructions:</Text>
@@ -94,7 +158,9 @@ function ProductDetails(props){
             <View style={ styles.buttonGroup }>
             <View style={ styles.setAmount }>
               <TouchableOpacity onPress={ handleAmountDecrease }>
-                <AntDesign name="minuscircleo" size={28} color="black" />
+                <View>
+                  <AntDesign name="minuscircleo" size={28} color="black" />
+                </View>
               </TouchableOpacity>
               <Text style={ styles.amountText }>{ amount }</Text>
               <TouchableOpacity onPress={ handleAmountIncrease }>
@@ -102,7 +168,9 @@ function ProductDetails(props){
               </TouchableOpacity>
             </View>
               <TouchableOpacity style={ styles.addToCartButton } onPress={ handleAddToCart }>
-                <Text style={ styles.addToCartButtonText }>Add To Cart</Text>
+                <Text style={ styles.addToCartButtonText }>
+                  { !!productInCartId ? 'Update To Cart' : 'Add To Cart' }
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -118,7 +186,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: '50%'
+    height: '40%'
   },
   backButton: {
     position: 'absolute',
@@ -191,6 +259,23 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     fontSize: 22, 
     fontWeight: 'bold'
+  },
+  selectedOptionsHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    marginTop: 10
+  },
+  radioButton: {
+    paddingVertical: 10
+  },
+  radioContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  selectedName: {
+    flexDirection: 'row',
+    alignItems: 'center'
   }
 });
 
@@ -204,6 +289,7 @@ const mapDispatchToProps = {
   addToFavoriteActive,
   addToFavoriteInactive,
   addToCart,
+  updateToCart
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductDetails);

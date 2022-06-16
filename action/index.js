@@ -27,6 +27,14 @@ export function addToCart({ productId, amount }){
   };
 }
 
+export function updateToCart({ id, amount }){
+  return {
+    type: 'UPDATE_TO_CART',
+    id,
+    amount
+  };
+}
+
 export function removeFromCart(payload){
   return {
     type: 'REMOVE_FROM_CART',
@@ -53,4 +61,17 @@ export function setUser(payload){
     type: 'SET_USER',
     payload
   };
+}
+
+export function setTotal(payload){
+  return {
+    type: 'SET_TOTAL',
+    payload
+  }
+}
+
+export function orderProductsInCart(){
+  return {
+    type: 'ORDER_PRODUCTS_IN_CART'
+  }
 }

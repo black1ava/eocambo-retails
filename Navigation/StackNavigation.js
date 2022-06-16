@@ -1,49 +1,42 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
-import Home from '../Screen/Home';
 import Favorite from '../Screen/Favourite';
-import Orders from '../Screen/Orders';
-import Promotions from '../Screen/Promotions';
 import Profile from '../Screen/Profile';
 import ProductDetails from '../Screen/ProductDetails';
 import Cart from '../Screen/Cart';
 import Categories from '../Screen/Categories';
 import Checkout from '../Screen/Checkout';
-import Login from '../Screen/Login';
+import DrawerNavigation from './DrawerNavigation';
+import { connect } from 'react-redux';
 
 const Stack = createNativeStackNavigator();
 
-function StackNavigation(){
+function StackNavigation(props){
+
   return (
     <Stack.Navigator
       screenOptions={{
         headerBackVisible: false,
+        headerShown: false,
         headerStyle:{
           backgroundColor: '#0AA1DD',
         },
         headerTitleStyle: {
           color: '#fff'
-        }
+        },
+        animation: 'none'
       }}
     >
       <Stack.Screen 
-        name="Home"
-        component={ Home }
+        name="Root"
+        component={ DrawerNavigation }
         options={{
-          headerShown: false
+          headerShown: false,
         }}
       />
       <Stack.Screen 
         name="Favorite"
         component={ Favorite }
-      />
-      <Stack.Screen 
-        name="Orders"
-        component={ Orders }
-      />
-      <Stack.Screen 
-        name="Promotions"
-        component={ Promotions }
       />
       <Stack.Screen 
         name="Me"
@@ -81,4 +74,10 @@ function StackNavigation(){
   );
 }
 
-export default StackNavigation;
+function mapStateToProps(state){
+  return {
+    user: state.user
+  }
+}
+
+export default connect(mapStateToProps)(StackNavigation);

@@ -1,9 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
-import axios from 'axios';
 
 let initialState= {
   products: [],
-  productsInCart: []
+  productsInCart: [],
+  user: null
 }
 
 export default function reducer(state = initialState, action){
@@ -16,19 +16,6 @@ export default function reducer(state = initialState, action){
       };
 
     case 'ADD_TO_FAVORITE_ACTIVE':
-      // async function addProductToFavorite(){
-      //   try{
-      //     await axios.post(`https://pos.eocambo.com/api/favourites/create/0/${ action.payload }`, {
-      //       user_id: 0,
-      //       product_id: action.payload
-      //     });
-      //     console.log('successs');
-      //   }catch(err){
-      //     console.log(err);
-      //   }
-      // }
-
-      // addProductToFavorite();
 
       return {
         ...state,
@@ -108,6 +95,12 @@ export default function reducer(state = initialState, action){
 
               return productInCart;
             })
+          };
+
+        case 'SET_USER':
+          return {
+            ...state,
+            user: action.payload
           };
 
     default:

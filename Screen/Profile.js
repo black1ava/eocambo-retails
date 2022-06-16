@@ -1,38 +1,60 @@
 import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image } from 'react-native'
 import { globalStyles } from '../styles/globalStyles';
 import NavBar from './Component/NavBar';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useSelector } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
 
 import Button from '../Shared/Button';
 import { menus } from '../Shared/menus';
 import ProfileMenuItem from './Component/ProfileMenuItem';
+import NavBarScreenFrame from './Component/NavBarScreenFrame';
 
 function Profile(props){
 
   const [menusProfile, setMenusProfile] = useState(menus);
+  const [email, setEmail] = useState('');
+  const [userName, setUserName] = useState('');
+  const [initial, setInitial] = useState(null);
+  const user = useSelector(state => state.user);
+  const providerData = user?.providerData;
+
+  useEffect(function(){
+    if(!!providerData){
+      const { email, displayName, phoneNumber } = providerData[0];
+      setEmail(email || phoneNumber);
+      setUserName(displayName || phoneNumber);
+      if(!!displayName){
+        setInitial(displayName[0].toUpperCase());
+      }
+    }
+  }, [providerData]);
+  
 
   useEffect(function(){
 
     setMenusProfile(function(currentMenus){
       const removeProfileMenus = currentMenus.filter(function(menu){
-        return menu.id !== 'profile'
+        return menu.name !== 'profile'
       });
       const updateProfileMenus = [
         ...removeProfileMenus,
-        { id: 'notifications', icon: 'notifications', content: 'Notifications' },
-        { id: 'settings', icon: 'settings', content: 'Settings' },
-        { id: 'logout', icon: 'logout', content: 'Logout' }
+        { id: uuidv4(), name: 'notifications', icon: 'notifications', content: 'Notifications' },
+        { id: uuidv4(), name: 'settings', icon: 'settings', content: 'Settings' },
+        { id: uuidv4(), name: 'logout', icon: 'logout', content: 'Logout' }
       ];
 
       return updateProfileMenus;
     });
   }, []);
 
+
   function renderMenu({ item }){
     return <ProfileMenuItem 
       icon={ item.icon } 
       content={ item.content }
+      name={ item.name }
       navigation={ props.navigation }
     />
   }
@@ -41,21 +63,31 @@ function Profile(props){
     return menu.id
   }
 
-  return (
+  function handleNavigateToSignin(){
+    props.navigation.navigate('Login');
+  }
+
+  const initialText = !!initial ? (
+    <Text style={ styles.initialText }>{ initial }</Text>
+    ) : (
+    <Image style={ styles.logo } source={require('../assets/eocambo.png')} />
+  );
+
+  const profileMarkUp = (
     <View style={{ ...globalStyles.content, marginHorizontal: 0, backgroundColor: 'grey' }}>
       <View style={ styles.profileSection }>
         <View style={ styles.userProfile }>
           <View style={ styles.userProfileContent }>
             <View style={ styles.userInfo }>
-              <View style={ styles.initial }>
-                <Text style={ styles.initialText }>T</Text>
+              <View style={{ ...styles.initial, backgroundColor: !!initial ? 'darkgreen' : 'white' }}>
+                { initialText }
               </View>
             </View>
             <View style={ styles.settings }>
               <MaterialIcons name="settings" size={24} color="black" />
             </View>
-            <Text style={{ color: '#fff'}}>roeunboratharath@gmail.com</Text>
-            <Text style={ styles.userTextInfo }>Tharath Rbt</Text>
+            <Text style={{ color: '#fff'}}>{ email }</Text>
+            <Text style={ styles.userTextInfo }>{ userName }</Text>
             <Button backgroundColor="#fff" title="Edit profiles" />
           </View>
         </View>
@@ -71,6 +103,21 @@ function Profile(props){
         </View>
       </View>
     </View>
+  );
+
+  const noUserLoginMarkup = (
+    <NavBarScreenFrame navigation={ props.navigation } showNavbar screenName="profile">
+      <View style={ globalStyles.center }>
+        <Text style={{ ...globalStyles.textBold, marginBottom: 10 }}>You are not signed in</Text>
+        <Button title="SIGN IN" backgroundColor="#0AA1DD" color="white" onAction={ handleNavigateToSignin }/>
+      </View>
+    </NavBarScreenFrame>
+  );
+
+  return (
+    <>
+      { user === null ? noUserLoginMarkup : profileMarkUp }
+    </>
   );
 }
 
@@ -89,7 +136,6 @@ const styles = StyleSheet.create({
   initial: {
     width: 100,
     height: 100,
-    backgroundColor: 'darkgreen',
     borderWidth: 4,
     borderColor: 'white',
     borderRadius: 10,
@@ -124,6 +170,10 @@ const styles = StyleSheet.create({
   },
   navbarSection: {
     paddingHorizontal: 15
+  },
+  logo: {
+    width: 80,
+    height: 30
   }
 });
 

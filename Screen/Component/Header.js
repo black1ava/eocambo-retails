@@ -8,6 +8,10 @@ function Header(props){
     props.navigation.navigate("Cart");
   }
 
+  function handleOpenDrawer(){
+    props.navigation.openDrawer();
+  }
+
   const cartMarkup = (
     <View style={ styles.inCartContainer }>
       <Text style={ styles.inCart }>{ props.numberInCart }</Text>
@@ -17,7 +21,9 @@ function Header(props){
   return(
     <View style={ styles.header }>
       <View style={ styles.headerSection }>
-        <Entypo name="menu" size={28} color="#4B7BE5" />
+        <TouchableOpacity onPress={ handleOpenDrawer }>
+          <Entypo name="menu" size={28} color="#4B7BE5" />
+        </TouchableOpacity>
         <Image style={ styles.logo } source={require('../../assets/eocambo.png')} />
         <TouchableOpacity onPress={ handleGoToCardClick }>
           <Feather name="shopping-cart" size={28} color="#4B7BE5" />

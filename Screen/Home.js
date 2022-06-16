@@ -3,12 +3,15 @@ import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import * as SplashScreen from 'expo-splash-screen';
+import { onAuthStateChanged } from 'firebase/auth';
 
 import Header from './Component/Header';
 import Categories from './Component/Categories';
 import NavBar from './Component/NavBar';
 import Products from './Component/Products';
-import { addProducts } from '../action';
+import { addProducts, setUser } from '../action';
+import * as Firebase from '../firebase'
+import NavBarScreenFrame from './Component/NavBarScreenFrame';
 
 
 function Home(props){
@@ -19,7 +22,10 @@ function Home(props){
   const [apiLoaded, setApiLoaded] = useState(false);
 
   useEffect(function(){
-    async function getProduts(){
+
+    onAuthStateChanged(Firebase.auth, async function(user){
+      props.setUser(user);
+
       await SplashScreen.preventAutoHideAsync();
       const response = await axios.get('https://pos.eocambo.com/api/products/0/62');
       const { products, category } = response.data;
@@ -50,10 +56,9 @@ function Home(props){
       }));
 
       setApiLoaded(true);
-    }
+    });
 
-    getProduts();
-  }, [props.addProducts]);
+  }, [props.addProducts, props.setUser, onAuthStateChanged]);
 
   useEffect(function(){
     setPopularProducts(props.products.filter(function(product){
@@ -81,23 +86,24 @@ function Home(props){
 
   return (
     <View onLayout={ handleLayout } style={ styles.scrollView }>
-      <Header navigation={ props.navigation } numberInCart={ numberProductsInCart}/>
-      <View style={{ ...styles.scrollView, ...styles.content  }}>
-        <ScrollView showsVerticalScrollIndicator={ false }>
-          <View style={ styles.scrollView }>
-            <View>
-              <Categories categories={ categories } navigation={ props.navigation } />
+      <NavBarScreenFrame navigation={ props.navigation } showNavbar screenName="home">
+        <Header navigation={ props.navigation } numberInCart={ numberProductsInCart}/>
+        <View style={{ ...styles.scrollView, ...styles.content  }}>
+          <ScrollView showsVerticalScrollIndicator={ false }>
+            <View style={ styles.scrollView }>
+              <View>
+                <Categories categories={ categories } navigation={ props.navigation } />
+              </View>
+              <View>
+                <Products title="Popular Products" products={ popularProducts } navigation={ props.navigation }/>
+              </View>
+              <View>
+              <Products title="Recommanded Products" products={ recommandedProducts } navigation={ props.navigation }/>
+              </View>
             </View>
-            <View>
-              <Products title="Popular Products" products={ popularProducts } navigation={ props.navigation }/>
-            </View>
-            <View>
-            <Products title="Recommanded Products" products={ recommandedProducts } navigation={ props.navigation }/>
-            </View>
-          </View>
-        </ScrollView>
-        <NavBar navigation={ props.navigation } screenName="home"/>
-      </View>
+          </ScrollView>
+        </View>
+      </NavBarScreenFrame>
     </View>
   );
 }
@@ -113,7 +119,8 @@ const styles = StyleSheet.create({
 });
 
 const mapDispatchToProps = {
-  addProducts
+  addProducts,
+  setUser
 };
 
 function mapStateToProps(state){

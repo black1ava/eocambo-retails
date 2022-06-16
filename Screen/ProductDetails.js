@@ -75,7 +75,9 @@ function ProductDetails(props){
       </TouchableOpacity>
       <View style={ styles.productInfo }>
         <View style={ styles.productHeader }>
-          <Text style={{ ...styles.productName, ...globalStyles.title }}>{ product.name }</Text>
+          <Text style={{ ...styles.productName, ...globalStyles.title, marginRight: 10 }}>
+            { product.name }
+          </Text>
           <TouchableOpacity onPress={ handleAddToFavoritePress }>
             <MaterialIcons name="favorite-border"  size={ 38 } color={ isFavorite ? 'red' : '#4B7BE5' } />
           </TouchableOpacity>
@@ -120,22 +122,23 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    left: 0,
+    left: 10,
     top: 32
   },
   goToCartButton: {
     position: 'absolute',
-    right: 0,
-    top: 32
+    right: 10,
+    top: 35
   },
   productInfo: {
     flex: 1,
-    marginTop: 10  
+    marginHorizontal: 10,
+    marginTop: 8
   },
   productHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'  
+    alignItems: 'center',
   },
   productBody: {
     flex: 1,

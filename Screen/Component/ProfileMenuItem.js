@@ -1,9 +1,20 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { MaterialIcons, AntDesign } from '@expo/vector-icons';
+import * as Firebase from '../../firebase';
+import { signOut } from 'firebase/auth';
+
 
 function ProfileMenuItem(props){
 
-  function handlePress(){
+  async function handlePress(){
+
+    if(props.content === 'Logout'){
+      const auth = Firebase.auth;
+      await signOut(auth);
+      props.navigation.navigate('Home');
+      return; 
+    }
+
     props.navigation.navigate(props.content);
   }
 

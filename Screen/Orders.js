@@ -1,15 +1,23 @@
 import { View, Text } from 'react-native';
+
+import NavBarScreenFrame from './Component/NavBarScreenFrame';
 import { globalStyles } from '../styles/globalStyles';
-import NavBar from './Component/NavBar';
 
 function Orders(props){
+
+  const fromDrawer = props.route.params?.fromDrawer;
+
   return(
-    <View style={ globalStyles.content }>
+    <NavBarScreenFrame 
+      navigation={ props.navigation } 
+      screenName="orders" 
+      showNavbar={ !fromDrawer }
+      title="My orders"
+    >
       <View style={ globalStyles.center}>
         <Text style={ globalStyles.title }>No order history yet</Text>
       </View>
-      <NavBar navigation={ props.navigation } screenName="orders"/>
-    </View>
+    </NavBarScreenFrame>
   );
 }
 

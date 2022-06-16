@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { View, Text, FlatList } from 'react-native';
+import { connect } from 'react-redux';
+
 import NavBar from './Component/NavBar';
 import { globalStyles } from '../styles/globalStyles';
-import { connect } from 'react-redux';
 import { addToFavoriteInactive } from '../action/index';
+import NavBarScreenFrame from './Component/NavBarScreenFrame';
 
 import FavoriteProduct from './Component/FavoriteProduct';
 
@@ -56,10 +58,9 @@ function Favorite(props){
   );
 
   return(
-    <View style={ globalStyles.content }>
+    <NavBarScreenFrame navigation={ props.navigation } title="Favorites" screenName="favorite" showNavbar>
       { favoriteProducts.length === 0 ? noItemMarkup : favoriteProductsMarkup }
-      <NavBar navigation={ props.navigation } screenName="favorite"/>
-    </View>
+    </NavBarScreenFrame>
   );
 }
 

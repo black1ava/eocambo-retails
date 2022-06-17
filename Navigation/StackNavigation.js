@@ -7,7 +7,8 @@ import Cart from '../Screen/Cart';
 import Categories from '../Screen/Categories';
 import Checkout from '../Screen/Checkout';
 import DrawerNavigation from './DrawerNavigation';
-import Settings from '../Screen/Settings'
+import Settings from '../Screen/Settings';
+import Login from '../Screen/Login';
 import { connect } from 'react-redux';
 
 const Stack = createNativeStackNavigator();
@@ -70,6 +71,10 @@ function StackNavigation(props){
       <Stack.Screen 
         name="Checkout"
         component={ Checkout }
+      />
+      <Stack.Screen 
+        name="Login"
+        component={ Login }
       />
     </Stack.Navigator>
   );

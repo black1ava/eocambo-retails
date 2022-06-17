@@ -7,10 +7,10 @@ import { increaseProductInCart, decreaseProductInCart } from '../../action/';
 
 function CartProduct(props){
   const [amount, setAmount] = useState(props.amount);
-  const [totalPrice, setTotalPrice] = useState(1);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(function(){
-    setTotalPrice(parseFloat(props.product.price) * amount);
+    setTotalPrice(parseInt(props.product.price) * amount);
   }, [amount]);
 
   function handleAmountDecrease(){

@@ -12,6 +12,10 @@ function Header(props){
     props.navigation.openDrawer();
   }
 
+  function handleNavigateToSearch(){
+    props.navigation.navigate('Search');
+  }
+
   const cartMarkup = (
     <View style={ styles.inCartContainer }>
       <Text style={ styles.inCart }>{ props.numberInCart }</Text>
@@ -30,7 +34,7 @@ function Header(props){
           { props.numberInCart > 0 && cartMarkup }
         </TouchableOpacity>
       </View>
-      <SearchButton />
+      <SearchButton title="Search" onAction={ handleNavigateToSearch }/>
     </View>
   );
 }

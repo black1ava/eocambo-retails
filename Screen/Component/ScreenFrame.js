@@ -16,7 +16,8 @@ function ScreenFrame({
   hasSearchField,
   children,
   searchText,
-  onSearchTextChange
+  onSearchTextChange,
+  backgroundColor = '#FFCC8F'
 }){
 
   const [_productsInCart, set_ProductsInCart] = useState(0);
@@ -76,7 +77,7 @@ function ScreenFrame({
 
   return(
     <View style={{ height: '100%' }}>
-      <View style={ styles.header }>
+      <View style={{ ...styles.header, backgroundColor }}>
         <TouchableOpacity style={ styles.mr10 } onPress={ handleBackButton }>
           <Ionicons  name="chevron-back-circle-outline" size={ 38 } color="#4B7BE5" />
         </TouchableOpacity>
@@ -103,7 +104,8 @@ ScreenFrame.propTypes = {
   children: PropTypes.element,
   hasSearchField: PropTypes.bool,
   searchText: PropTypes.string,
-  onSearchTextChange: PropTypes.func
+  onSearchTextChange: PropTypes.func,
+  backgroundColor: PropTypes.string
 };
 
 const styles = StyleSheet.create({

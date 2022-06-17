@@ -15,9 +15,6 @@ function CustomDrawerContent(props){
 
   const user = useSelector(state => state.user);
 
-
-  console.log(user);
-
   const authDrawerItem = user === null ? (
     <DrawerItem 
       label="Login"

@@ -40,7 +40,7 @@ function Profile(props){
       });
       const updateProfileMenus = [
         ...removeProfileMenus,
-        { id: uuidv4(), name: 'notifications', icon: 'notifications', content: 'Notifications' },
+        { id: uuidv4(), name: 'notifications', icon: 'notifications', content: 'Notification' },
         { id: uuidv4(), name: 'settings', icon: 'settings', content: 'Settings' },
         { id: uuidv4(), name: 'logout', icon: 'logout', content: 'Logout' }
       ];

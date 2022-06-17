@@ -92,7 +92,7 @@ function Cart(props){
     <>
     {
       products.length === 0 ? (
-        <ScreenFrame navigation={ props.navigation } title="Cart"  hasSearch>
+        <ScreenFrame navigation={ props.navigation } title="Cart"  hasSearch hasGoToCart>
           <View style={ globalStyles.center }>
             <Text style={{ ...globalStyles.textBold, ...globalStyles.title }}>No item in cart</Text>
           </View>

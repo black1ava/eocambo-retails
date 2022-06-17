@@ -2,15 +2,10 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import { connect } from 'react-redux';
 
 import Home from '../Screen/Home';
-import Favorite from '../Screen/Favourite';
 import Orders from '../Screen/Orders';
 import Promotions from '../Screen/Promotions';
-import Profile from '../Screen/Profile';
-import ProductDetails from '../Screen/ProductDetails';
-import Cart from '../Screen/Cart';
-import Categories from '../Screen/Categories';
-import Checkout from '../Screen/Checkout';
 import Login from '../Screen/Login';
+import Settings from '../Screen/Settings';
 import CustomDrawerContent from './CustomDrawerContent';
 
 
@@ -46,6 +41,13 @@ function DrawerNavigation(){
         component={ Login }
         options={{
           headerShown: false
+        }}
+      />
+      <Drawer.Screen 
+        name="Settings"
+        component={ Settings }
+        options={{
+          headerShown:false
         }}
       />
     </Drawer.Navigator>

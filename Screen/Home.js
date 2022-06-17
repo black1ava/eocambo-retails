@@ -9,7 +9,7 @@ import Header from './Component/Header';
 import Categories from './Component/Categories';
 import NavBar from './Component/NavBar';
 import Products from './Component/Products';
-import { addProducts, setUser } from '../action';
+import { addProducts, setUser, setCompanyInfo } from '../action';
 import * as Firebase from '../firebase'
 import NavBarScreenFrame from './Component/NavBarScreenFrame';
 
@@ -55,6 +55,9 @@ function Home(props){
           uri: c.image_url
         };
       }));
+
+      const companyInfoResponse = await axios.get('https://pos.eocambo.com/api/company/search/62');
+      props.setCompanyInfo(companyInfoResponse.data.data[0]);
 
       setApiLoaded(true);
     });
@@ -121,7 +124,8 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = {
   addProducts,
-  setUser
+  setUser,
+  setCompanyInfo
 };
 
 function mapStateToProps(state){

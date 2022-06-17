@@ -7,6 +7,7 @@ import Cart from '../Screen/Cart';
 import Categories from '../Screen/Categories';
 import Checkout from '../Screen/Checkout';
 import DrawerNavigation from './DrawerNavigation';
+import Settings from '../Screen/Settings'
 import { connect } from 'react-redux';
 
 const Stack = createNativeStackNavigator();

@@ -75,3 +75,10 @@ export function orderProductsInCart(){
     type: 'ORDER_PRODUCTS_IN_CART'
   }
 }
+
+export function setCompanyInfo(payload){
+  return {
+    type: 'SET_COMPANY_INFO',
+    payload
+  };
+}

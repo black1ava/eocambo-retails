@@ -32,6 +32,13 @@ function ScreenFrame(props){
     </View>
   );
 
+  const goToCartMarkUp = props.hasGoToCart && (
+    <TouchableOpacity onPress={ handleToCartPress }>
+      <Feather name="shopping-cart" size={30} color="#4B7BE5" />
+      { productsInCart > 0 && inCartTextMarkeup }
+    </TouchableOpacity>
+  );
+
   return(
     <View style={{ height: '100%' }}>
       <View style={ styles.header }>
@@ -41,10 +48,7 @@ function ScreenFrame(props){
         <Text style={{ ...globalStyles.title, ...styles.title }}>{ props.title }</Text>
         <View style={ styles.row }>
           { props.hasSearch && searchButtonMarkup }
-          <TouchableOpacity onPress={ handleToCartPress }>
-            <Feather name="shopping-cart" size={30} color="#4B7BE5" />
-            { productsInCart > 0 && inCartTextMarkeup }
-          </TouchableOpacity>
+          { goToCartMarkUp }
         </View>
       </View>
       <View style={{ flex: 1 }}>

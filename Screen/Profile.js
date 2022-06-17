@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Image } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native'
 import { globalStyles } from '../styles/globalStyles';
 import NavBar from './Component/NavBar';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -49,6 +49,10 @@ function Profile(props){
     });
   }, []);
 
+  function handleNavigateToSettings(){
+    props.navigation.navigate('Settings');
+  }
+
 
   function renderMenu({ item }){
     return <ProfileMenuItem 
@@ -84,7 +88,9 @@ function Profile(props){
               </View>
             </View>
             <View style={ styles.settings }>
-              <MaterialIcons name="settings" size={24} color="black" />
+              <TouchableOpacity onPress={ handleNavigateToSettings }>
+                <MaterialIcons name="settings" size={24} color="white" />
+              </TouchableOpacity>
             </View>
             <Text style={{ color: '#fff'}}>{ email }</Text>
             <Text style={ styles.userTextInfo }>{ userName }</Text>

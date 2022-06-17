@@ -1,10 +1,8 @@
 import { createDrawerNavigator } from '@react-navigation/drawer'
-import { connect } from 'react-redux';
 
 import Home from '../Screen/Home';
 import Orders from '../Screen/Orders';
 import Promotions from '../Screen/Promotions';
-import Login from '../Screen/Login';
 import Settings from '../Screen/Settings';
 import CustomDrawerContent from './CustomDrawerContent';
 
@@ -37,13 +35,6 @@ function DrawerNavigation(){
         component={ Promotions }
       />
       <Drawer.Screen 
-        name="Login"
-        component={ Login }
-        options={{
-          headerShown: false
-        }}
-      />
-      <Drawer.Screen 
         name="Settings"
         component={ Settings }
         options={{
@@ -54,10 +45,5 @@ function DrawerNavigation(){
   );
 }
 
-function mapStateToProps(state){
-  return {
-    user: state.user
-  }
-}
 
-export default connect(mapStateToProps)(DrawerNavigation);
+export default DrawerNavigation;

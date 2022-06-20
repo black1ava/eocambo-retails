@@ -24,7 +24,20 @@ function Home(props){
   useEffect(function(){
 
     onAuthStateChanged(Firebase.auth, async function(user){
-      props.setUser(user);
+      if(user !== null){
+        const name = user.providerData[0]?.displayName;
+        const email = user.providerData[0]?.email;
+        const phoneNumber = user.providerData[0]?.phoneNumber;
+  
+        const _user = {
+          name: name || phoneNumber,
+          email: email || phoneNumber,
+          phoneNumber
+        };
+        props.setUser(_user);
+      }else{
+        props.setUser(null);
+      }
 
       await SplashScreen.preventAutoHideAsync();
       const response = await axios.get('https://pos.eocambo.com/api/products/0/62');

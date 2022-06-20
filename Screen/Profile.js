@@ -18,18 +18,20 @@ function Profile(props){
   const [userName, setUserName] = useState('');
   const [initial, setInitial] = useState(null);
   const user = useSelector(state => state.user);
-  const providerData = user?.providerData;
 
   useEffect(function(){
-    if(!!providerData){
-      const { email, displayName, phoneNumber } = providerData[0];
-      setEmail(email || phoneNumber);
-      setUserName(displayName || phoneNumber);
-      if(!!displayName){
-        setInitial(displayName[0].toUpperCase());
+    if(user !== null){
+      const { name, email } = user;
+      setEmail(email);
+      setUserName(name);
+      
+      const regExp = new RegExp('^[\+0-9]+');
+  
+      if(!regExp.test(name)){
+        setInitial(name[0]?.toUpperCase());
       }
     }
-  }, [providerData]);
+  }, [user]);
   
 
   useEffect(function(){
@@ -71,6 +73,10 @@ function Profile(props){
     props.navigation.navigate('Login');
   }
 
+  function handleEditProfile(){
+    props.navigation.navigate('EditProfile');
+  }
+
   const initialText = !!initial ? (
     <Text style={ styles.initialText }>{ initial }</Text>
     ) : (
@@ -94,7 +100,7 @@ function Profile(props){
             </View>
             <Text style={{ color: '#fff'}}>{ email }</Text>
             <Text style={ styles.userTextInfo }>{ userName }</Text>
-            <Button backgroundColor="#fff" title="Edit profiles" />
+            <Button backgroundColor="#fff" title="Edit profiles" onAction={ handleEditProfile }/>
           </View>
         </View>
         <View style={{ ...globalStyles.content, ...styles.menuSection }}>

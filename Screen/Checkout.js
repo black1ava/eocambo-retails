@@ -14,7 +14,7 @@ function Checkout(props){
 
   const productsInCart = useSelector(state => state.productsInCart);
   const products = useSelector(state => state.products);
-  const user = useSelector(state => state.user).providerData[0];
+  const user = useSelector(state => state.user);
   const total = useSelector(state => state.total);
 
   const _productsInCart = productsInCart.filter(function(productInCart){
@@ -26,11 +26,11 @@ function Checkout(props){
   const userInfo = [
     {
       key: 'Name',
-      value: user.displayName || user.phoneNumber
+      value: user.name || user.name
     },
     {
       key: 'Phone number',
-      value: user.phoneNumber || ''
+      value: user.mobile || ''
     },
     {
       key: 'Email',

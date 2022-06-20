@@ -19,11 +19,13 @@ import {
   addToCart,
   updateToCart
 } from '../action';
+import axios from 'axios';
 
 function ProductDetails(props){
   const product = props.route.params;
-  // console.log(props.productsInCart);
-
+  const { id } = product;
+  const { uid } = props.user;
+  
   const [isFavorite, setIsFavorite] = useState(product.favorite);
   const [productsInCart, setProductsInCart] = useState(0);
   const [amount, setAmount] = useState(1);
@@ -65,7 +67,7 @@ function ProductDetails(props){
     }
   }
 
-  function handleAddToFavoritePress(){
+  async function handleAddToFavoritePress(){
 
     if(props.user === null){
       Alert.alert(
@@ -87,6 +89,8 @@ function ProductDetails(props){
     }else{
       props.addToFavoriteActive(product.id);
     }
+
+    await axios.post(`https://pos.eocambo.com/api/favourites/create/${ uid }/${ id }`);
 
     setIsFavorite(current => !current);
   }

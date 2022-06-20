@@ -1,11 +1,13 @@
 import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { Entypo } from '@expo/vector-icons';
+import axios from 'axios';
 
 import ScreenFrame from './Component/ScreenFrame';
 import Button from '../Shared/Button';
+import { updateProfile } from '../action';
 
 const propTypes = {
   navigation: PropTypes.object.isRequired
@@ -15,8 +17,11 @@ function EditProfile({ navigation }){
   const user = useSelector(state => state.user);
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
-  const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber);
+  const [phoneNumber, setPhoneNumber] = useState(user.mobile);
   const [isEditActive, setIsEditActive] = useState(false);
+  const dispatch = useDispatch();
+
+  const { id } = user;
 
   function handleNameChange(value){
     setName(value);
@@ -34,11 +39,30 @@ function EditProfile({ navigation }){
     setIsEditActive(state => !state);
   }
 
+  async function handleUpdateProfile(){
+    try {
+      await axios.post('https://pos.eocambo.com/api/contact/update', {
+        id,
+        email,
+        mobile: phoneNumber,
+        name
+      });
+      dispatch(updateProfile({ name, email, mobile: phoneNumber }));
+      navigation.navigate('Me');
+    }catch(err){
+      console.log(error);
+    }
+  }
+
   const contactInfoMarkup = isEditActive ? (
     <View style={ styles.edit }>
       <View>
         <Text>Name</Text>
-        <TextInput style={ styles.input } value={ name } onChangeText={ handleNameChange } />
+        <TextInput 
+          style={ styles.input } 
+          value={ name } 
+          onChangeText={ handleNameChange } 
+        />
         <Text>Email</Text>
         <TextInput 
           style={ styles.input } 
@@ -54,7 +78,12 @@ function EditProfile({ navigation }){
           keyboardType="phone-pad"
         />
       </View>
-      <Button title="Save changes" backgroundColor="#0AA1DD" color="#fff" />
+      <Button 
+        title="Save changes" 
+        backgroundColor="#0AA1DD" 
+        color="#fff" 
+        onAction={ handleUpdateProfile }
+      />
     </View>
   ):(
     <View>

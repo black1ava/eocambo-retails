@@ -152,6 +152,17 @@ export default function reducer(state = initialState, action){
             promotions: action.payload
           };
 
+        case 'UPDATE_PROFILE':
+          return {
+            ...state,
+            user: {
+              ...state.user,
+              name: action.payload.name,
+              email: action.payload.email,
+              mobile: action.payload.mobile
+            }
+          };
+
     default:
       return state;
   }

@@ -89,3 +89,10 @@ export function setPromotions(payload){
     payload
   }
 }
+
+export function updateProfile(payload){
+  return {
+    type: 'UPDATE_PROFILE',
+    payload
+  }
+}

@@ -24,23 +24,20 @@ function Home(props){
   useEffect(function(){
 
     onAuthStateChanged(Firebase.auth, async function(user){
+      const uid = user === null ? 0 : user.providerData[0].uid;
+
       if(user !== null){
-        const name = user.providerData[0]?.displayName;
-        const email = user.providerData[0]?.email;
-        const phoneNumber = user.providerData[0]?.phoneNumber;
   
-        const _user = {
-          name: name || phoneNumber,
-          email: email || phoneNumber,
-          phoneNumber
-        };
-        props.setUser(_user);
+        const response = await axios.get(`https://pos.eocambo.com/api/customer/search/62/${ uid }`);
+        const $user  = response.data.data[0];
+
+        props.setUser($user);
       }else{
         props.setUser(null);
       }
 
       await SplashScreen.preventAutoHideAsync();
-      const response = await axios.get('https://pos.eocambo.com/api/products/0/62');
+      const response = await axios.get(`https://pos.eocambo.com/api/products/${ uid }/62`);
       const { products, category } = response.data;
 
       props.addProducts(products.map(function(product){

@@ -14,15 +14,15 @@ import NavBarScreenFrame from './Component/NavBarScreenFrame';
 function Profile(props){
 
   const [menusProfile, setMenusProfile] = useState(menus);
-  const [email, setEmail] = useState('');
+  const [uid, setUid] = useState('');
   const [userName, setUserName] = useState('');
   const [initial, setInitial] = useState(null);
   const user = useSelector(state => state.user);
 
   useEffect(function(){
     if(user !== null){
-      const { name, email } = user;
-      setEmail(email);
+      const { name, uid } = user;
+      setUid(uid);
       setUserName(name);
       
       const regExp = new RegExp('^[\+0-9]+');
@@ -98,7 +98,7 @@ function Profile(props){
                 <MaterialIcons name="settings" size={24} color="white" />
               </TouchableOpacity>
             </View>
-            <Text style={{ color: '#fff'}}>{ email }</Text>
+            <Text style={{ color: '#fff'}}>{ uid }</Text>
             <Text style={ styles.userTextInfo }>{ userName }</Text>
             <Button backgroundColor="#fff" title="Edit profiles" onAction={ handleEditProfile }/>
           </View>

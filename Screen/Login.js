@@ -5,7 +5,8 @@ import {
   PhoneAuthProvider,
   signInWithCredential,
   FacebookAuthProvider,
-  GoogleAuthProvider
+  GoogleAuthProvider,
+  onAuthStateChanged
 } from 'firebase/auth';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import * as Facebook from 'expo-auth-session/providers/facebook';
@@ -13,6 +14,7 @@ import * as Google from 'expo-auth-session/providers/google'
 import { ResponseType } from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
 import { Ionicons } from '@expo/vector-icons';
+import axios from 'axios';
 
 import * as Firebase from '../firebase'
 import Button from '../Shared/Button';
@@ -37,6 +39,33 @@ function Login(props){
   const [googleRequest, googleResponse, googlePromptAsync] = Google.useIdTokenAuthRequest({
     clientId: '858605708808-65v33u0upm5k9un1phi32rt9obkh4tcf.apps.googleusercontent.com'
   });
+
+  function login(){
+    onAuthStateChanged(auth, async function(user){
+      const { displayName, email, phoneNumber, uid } = user.providerData[0];
+
+      try {
+        await axios.post('https://pos.eocambo.com/api/contact/create', {
+          business_id: 62,
+          type: "customer",
+          name: displayName || phoneNumber,
+          image_url: "",
+          uid,
+          fcm_token: "",
+          email: email || uid,
+          mobile: phoneNumber,
+          created_by: 231,
+          total_rp: 0,
+          total_rp_used: 0,
+          total_rp_expired: 0,
+          is_default: 0,
+          contact_status: "active"
+        });
+      }catch(err){
+        console.error(err);
+      }
+    });
+  }
 
   function handlePhoneNumberChange(value){
     setPhoneNumber(value);
@@ -63,6 +92,7 @@ function Login(props){
       setPhoneNumber('');
       handleVerificationModalVisibleToggle();
       props.navigation.navigate('Home');
+      login();
     }catch(err){
       handleVerificationModalVisibleToggle();
       alert("Please try again");

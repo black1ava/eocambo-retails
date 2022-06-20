@@ -7,7 +7,8 @@ import {
   TouchableOpacity, 
   LogBox, 
   TextInput, 
-  ScrollView 
+  ScrollView,
+  Alert
 } from 'react-native';
 import { Ionicons, Feather, MaterialIcons, AntDesign } from '@expo/vector-icons';
 import { globalStyles } from '../styles/globalStyles';
@@ -65,6 +66,22 @@ function ProductDetails(props){
   }
 
   function handleAddToFavoritePress(){
+
+    if(props.user === null){
+      Alert.alert(
+        'Sign In Required!',
+        'Please sign in before you can add this item to your favorite',
+        [
+          {
+            text: 'Sign in',
+            onPress: () => props.navigation.navigate('Login')
+          }
+        ]
+      );
+
+      return;
+    }
+
     if(product.favorite){
       props.addToFavoriteInactive(product.id);
     }else{
@@ -75,6 +92,21 @@ function ProductDetails(props){
   }
 
   function handleAddToCart(){
+
+    if(props.user === null){
+      Alert.alert(
+        'Sign In Required!',
+        'Please sign in before you can add this item to your favorite',
+        [
+          {
+            text: 'Sign in',
+            onPress: () => props.navigation.navigate('Login')
+          }
+        ]
+      );
+
+      return;
+    }
 
     if(!isSelected){
       alert('Please select an option price');
@@ -281,7 +313,8 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state){
   return {
-    productsInCart: state.productsInCart
+    productsInCart: state.productsInCart,
+    user: state.user
   };
 }
 

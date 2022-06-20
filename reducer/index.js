@@ -5,7 +5,8 @@ const initialState= {
   productsInCart: [],
   user: null,
   total: 0,
-  companyInfo: []
+  companyInfo: [],
+  promotions: []
 };
 
 export default function reducer(state = initialState, action){
@@ -143,6 +144,12 @@ export default function reducer(state = initialState, action){
           return {
             ...state,
             companyInfo: action.payload
+          };
+
+        case 'SET_PROMOTIONS':
+          return {
+            ...state,
+            promotions: action.payload
           };
 
     default:

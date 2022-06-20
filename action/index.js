@@ -82,3 +82,10 @@ export function setCompanyInfo(payload){
     payload
   };
 }
+
+export function setPromotions(payload){
+  return {
+    type: 'SET_PROMOTIONS',
+    payload
+  }
+}

@@ -9,7 +9,7 @@ import Header from './Component/Header';
 import Categories from './Component/Categories';
 import NavBar from './Component/NavBar';
 import Products from './Component/Products';
-import { addProducts, setUser, setCompanyInfo } from '../action';
+import { addProducts, setUser, setCompanyInfo, setPromotions } from '../action';
 import * as Firebase from '../firebase'
 import NavBarScreenFrame from './Component/NavBarScreenFrame';
 
@@ -59,10 +59,44 @@ function Home(props){
       const companyInfoResponse = await axios.get('https://pos.eocambo.com/api/company/search/62');
       props.setCompanyInfo(companyInfoResponse.data.data[0]);
 
+      const _response = await axios.get('https://pos.eocambo.com/api/discount/search/62');
+      const { data } = _response;
+      const promotions = [];
+      for(const key in data){
+        const { 
+          id, 
+          name, 
+          image, 
+          created_at, 
+          starts_at, 
+          ends_at, 
+          is_active, 
+          discount_amount,
+          discount_type,
+          description
+        } = data[key];
+        if(key !== 'success'){
+          promotions.push({
+            id, 
+            name, 
+            image: image || 'https://pos.eocambo.com/img/default.png', 
+            created_at, 
+            starts_at, 
+            ends_at, 
+            is_active, 
+            discount_amount,
+            discount_type,
+            description
+          });
+        }
+      }
+
+      props.setPromotions(promotions);
+
       setApiLoaded(true);
     });
 
-  }, [props.addProducts, props.setUser, onAuthStateChanged]);
+  }, [props.addProducts, props.setUser, onAuthStateChanged, props.setPromotions]);
 
   useEffect(function(){
     setPopularProducts(props.products.filter(function(product){
@@ -125,13 +159,15 @@ const styles = StyleSheet.create({
 const mapDispatchToProps = {
   addProducts,
   setUser,
-  setCompanyInfo
+  setCompanyInfo,
+  setPromotions
 };
 
 function mapStateToProps(state){
   return {
     products: state.products,
-    productsInCart: state.productsInCart
+    productsInCart: state.productsInCart,
+    promotions: state.promotions
   };
 }
 

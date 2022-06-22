@@ -2,7 +2,6 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { globalStyles } from '../styles/globalStyles';
 function Product(props){
 
-
   function handlePress(){
     props.navigation.navigate('Product details', props.product);
   }

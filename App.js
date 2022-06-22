@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import 'react-native-get-random-values';
+import 'react-native-gesture-handler';
 
 import reducer from './reducer';
 import Navigation from './Navigation';
@@ -16,22 +17,6 @@ const store = configureStore({
 });
 
 export default function App() {
-
-  // const [user, setUser] = useState();
-
-  // const auth = getAuth();
-
-  // useEffect(function(){
-  //   const unsubscribeFromAuthStatusChanged = onAuthStateChanged(auth, function(user){
-  //     if(user){
-  //       setUser(user);
-  //     }else{
-  //       setUser(undefined);
-  //     }
-  //   });
-
-  //   return unsubscribeFromAuthStatusChanged();
-  // }, []);
 
   return (
     <Provider store={ store }>

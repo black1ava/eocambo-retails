@@ -4,8 +4,18 @@ import { connect } from 'react-redux';
 
 function NavItem(props){
 
+  function handleNavigate(){
+    
+    if(props.root){
+      props.navigation.navigate('Root', { screen: props.content });
+      return;
+    }
+
+    props.navigation.navigate(props.content);
+  }
+
   return(
-    <TouchableOpacity onPress={ () => props.navigation.navigate(props.content)}>
+    <TouchableOpacity onPress={ handleNavigate }>
       <View style={ styles.navItem }>
         <MaterialIcons name={ props.icon } size={24} color={ props.screenName === props.name ? '#4B7BE5' : 'black' } />
         <Text style={{ color: props.screenName === props.name ? '#4B7BE5' : 'black' }}>{ props.content }</Text>

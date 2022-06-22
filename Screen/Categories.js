@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import ScreenFrame from './Component/ScreenFrame';
 import { connect } from 'react-redux';
 
@@ -10,11 +10,10 @@ function Categories(props){
   const [products, setProducts] = useState([]);
   const { id } = props.route.params;
   const { name } = props.route.params;
-  // console.log(id);
 
   useEffect(function(){
     setProducts(props.products.filter(function(product){
-      return product.category.includes(id);
+      return product.categoryId === id;
     }));
   }, [props.products]);
 

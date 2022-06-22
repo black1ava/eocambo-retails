@@ -1,26 +1,37 @@
+import { v4 as uuidv4 }  from 'uuid';
+
 export const menus = [
   {
-    id: 'home',
+    id: uuidv4(),
+    name: 'home',
     icon: 'home',
-    content: 'Home'
+    content: 'Home',
+    root: true
   },
   {
     id: 'favorite',
     icon: 'favorite',
-    content: 'Favorite'
+    name: 'favorite',
+    content: 'Favorite',
+    root: false
   },
   {
-    id: 'orders',
+    id: uuidv4(),
+    name: 'orders',
     icon: 'shopping-cart',
-    content: 'Orders'
+    content: 'Orders',
+    root: true
   },
   {
-    id: 'promotions',
+    id: uuidv4(),
+    name: 'promotions',
     icon: 'attach-money',
-    content: 'Promotions'
+    content: 'Promotions',
+    root: true
   },
   {
-    id: 'profile',
+    id: uuidv4(),
+    name: 'profile',
     icon: 'person',
     content: 'Me'
   }

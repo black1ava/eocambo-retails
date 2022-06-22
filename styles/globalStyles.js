@@ -25,7 +25,7 @@ export const globalStyles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: 'space-between',
-    margin: 15
+    marginHorizontal: 8
   },
   center: {
     alignItems: 'center',

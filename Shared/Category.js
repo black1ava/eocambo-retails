@@ -1,17 +1,18 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
 function Category(props){
 
   function handlePress(){
-    props.navigation.navigate("Categories", { id: props.id, name: props.content });
+    const { id, name } = props;
+    props.navigation.navigate("Categories", { id, name });
   }
 
   return(
     <TouchableOpacity onPress={ handlePress } style={ styles.category }>
       <View style={ styles.categoryIcon }>
-        { props.icon }
+        <Image style={ styles.icon } source={{ uri: props.uri }}/>
       </View>
-      <Text>{ props.content }</Text>
+      <Text>{ props.name }</Text>
     </TouchableOpacity>
   );
 }
@@ -27,6 +28,10 @@ const styles = StyleSheet.create({
   },
   categoryIcon: {
     marginRight: 5
+  },
+  icon: {
+    width: 30,
+    height: 30
   }
 });
 

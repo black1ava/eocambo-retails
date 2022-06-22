@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { globalStyles } from '../../styles/globalStyles';
+import Spinner from './Spinner';
 
 
 function ScreenFrame({
@@ -17,7 +18,8 @@ function ScreenFrame({
   children,
   searchText,
   onSearchTextChange,
-  backgroundColor = '#FFCC8F'
+  backgroundColor = '#FFCC8F',
+  loading
 }){
 
   const [_productsInCart, set_ProductsInCart] = useState(0);
@@ -89,6 +91,7 @@ function ScreenFrame({
         </View>
       </View>
       <View style={{ flex: 1 }}>
+        <Spinner visible={ loading } />
         { children }
       </View>
     </View>
@@ -105,7 +108,8 @@ ScreenFrame.propTypes = {
   hasSearchField: PropTypes.bool,
   searchText: PropTypes.string,
   onSearchTextChange: PropTypes.func,
-  backgroundColor: PropTypes.string
+  backgroundColor: PropTypes.string,
+  loading: PropTypes.bool
 };
 
 const styles = StyleSheet.create({

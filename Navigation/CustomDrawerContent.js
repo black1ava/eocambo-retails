@@ -25,7 +25,6 @@ function CustomDrawerContent(props){
       label="Log out"
       onPress={ async () => {
         await signOut(auth);
-        props.navigation.navigate('Home');
       } }
     />
   );

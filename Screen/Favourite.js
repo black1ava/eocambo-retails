@@ -8,9 +8,11 @@ import { addToFavoriteInactive } from '../action/index';
 import NavBarScreenFrame from './Component/NavBarScreenFrame';
 
 import FavoriteProduct from './Component/FavoriteProduct';
+import axios from 'axios';
 
 function Favorite(props){
   const [favoriteProducts, setFavoriteProducts] = useState([]);
+
 
   useEffect(function(){
     const favoriteProducts = props.products.filter(function(product){
@@ -26,12 +28,16 @@ function Favorite(props){
     </View>
   );
 
-  function handleRemoveFavoriteProduct(id){
+  async function handleRemoveFavoriteProduct(id){
     setFavoriteProducts(function(products){
       return products.filter(function(product){
         return product.id !== id;
       });
     });
+
+    const { uid } = props.user;
+
+    await axios.post(`https://pos.eocambo.com/api/favourites/create/${ uid }/${ id }`);
 
     props.addToFavoriteInactive(id);
   }
@@ -66,7 +72,8 @@ function Favorite(props){
 
 function mapStateToProps(state){
   return {
-    products: state.products
+    products: state.products,
+    user: state.user
   }
 }
 

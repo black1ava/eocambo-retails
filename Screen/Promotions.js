@@ -1,20 +1,65 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import { globalStyles } from '../styles/globalStyles';
 import NavBarScreenFrame from './Component/NavBarScreenFrame';
+import Promotion from './Component/Promotion';
 
+function Promotions({ navigation, route }){
 
-function Promotions(props){
+  const fromDrawer = route.params?.fromDrawer;
+  const promotions = useSelector(state => state.promotions);
 
-  const fromDrawer = props.route.params?.fromDrawer;
+  function renderPromotions({ item }){
+    return (
+      <Promotion 
+        name={ item.name } 
+        start={ item.starts_at } 
+        end={ item.ends_at } 
+        image={ item.image }
+        description={ item.description }
+        navigation={ navigation }
+      />
+    )
+  }
+
+  function extractPromotionsKey(promotion){
+    return promotion.id;
+  }
+
+  const promotionsMarkup = promotions.length > 0 ? (
+    <View style={ styles.container }>
+      <FlatList 
+        data={ promotions }
+        renderItem={ renderPromotions }
+        keyExtractor={ extractPromotionsKey }
+      />
+    </View>
+  ):(
+    <View style={ globalStyles.center}>
+      <Text style={ globalStyles.title }>Empty</Text>
+    </View>
+  );
 
   return(
-    <NavBarScreenFrame navigation={ props.navigation } title="Promotions" screenName="promotions" showNavbar={ !fromDrawer }>
-      <View style={ globalStyles.center}>
-        <Text style={ globalStyles.title }>Empty</Text>
-      </View>
-    </NavBarScreenFrame>
+    <View style={ styles.container }>
+      <NavBarScreenFrame navigation={ navigation } title="Promotions" screenName="promotions" showNavbar={ !fromDrawer }>
+        { promotionsMarkup }
+      </NavBarScreenFrame>
+    </View>
   );
 }
+
+Promotions.propTypes = {
+  navigation: PropTypes.object,
+  route: PropTypes.object
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  }
+});
 
 export default Promotions;

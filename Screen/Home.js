@@ -6,13 +6,14 @@ import PopularProducts from './Component/PopularProduts';
 import RecommandedProducts from './Component/RecommandedProducts';
 import NavBar from './Component/NavBar';
 import { connect } from 'react-redux';
-import { toggleHomeMenuActive } from '../action';
+import { toggleHomeMenuActive, inactivateAllMenus } from '../action';
 
 function Home(props){
 
   useEffect(function(){
-  props.toggleHomeMenuActive('home');
-  }, [props.toggleHomeMenuActive]);
+    props.inactivateAllMenus();
+    props.toggleHomeMenuActive();
+  }, [props.toggleHomeMenuActive, props.inactivateAllMenus]);
 
   return (
     <View style={ styles.scrollView }>
@@ -31,7 +32,7 @@ function Home(props){
             </View>
           </View>
         </ScrollView>
-        <NavBar />
+        <NavBar navigation={ props.navigation } screenName="home"/>
       </View>
     </View>
   );
@@ -48,7 +49,8 @@ const styles = StyleSheet.create({
 });
 
 const mapDispatchToProps = {
-  toggleHomeMenuActive
+  toggleHomeMenuActive,
+  inactivateAllMenus
 };
 
 function mapStateToProps(state){

@@ -2,14 +2,16 @@ import { View, StyleSheet } from 'react-native';
 import NavItem from './NavItem';
 import { menus } from '../../Shared/menus';
 
-function NavBar(){
+function NavBar(props){
 
   const navItems = menus.map(function(item){
     return <NavItem 
         key={ item.id } 
         name={ item.id } 
         icon={ item.icon } 
+        screenName={ props.screenName }
         content={ item.content }
+        navigation={ props.navigation }
       />
   });
 

@@ -1,11 +1,12 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { View, TextInput, Modal, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Entypo, AntDesign } from '@expo/vector-icons';
 import { 
   PhoneAuthProvider,
   signInWithCredential,
   FacebookAuthProvider,
-  GoogleAuthProvider
+  GoogleAuthProvider,
+  onAuthStateChanged
 } from 'firebase/auth';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import * as Facebook from 'expo-auth-session/providers/facebook';
@@ -13,9 +14,12 @@ import * as Google from 'expo-auth-session/providers/google'
 import { ResponseType } from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
 import { Ionicons } from '@expo/vector-icons';
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
 
 import * as Firebase from '../firebase'
 import Button from '../Shared/Button';
+import { setLoginAttempt } from '../action'
 
 
 const app = Firebase.app;
@@ -28,6 +32,7 @@ function Login(props){
   const [otp, setOtp] = useState('');
   const [verificationModalVisible, setVerificationModalVisible] = useState(false);
   const recaptchaRef = useRef(null);
+  const dispatch = useDispatch();
 
   const [facebookRequest, facebookResponse, facebookPromptAsync] = Facebook.useAuthRequest({
     responseType: ResponseType.Token,
@@ -37,6 +42,33 @@ function Login(props){
   const [googleRequest, googleResponse, googlePromptAsync] = Google.useIdTokenAuthRequest({
     clientId: '858605708808-65v33u0upm5k9un1phi32rt9obkh4tcf.apps.googleusercontent.com'
   });
+
+  const login = useCallback(function(){
+    return new Promise(function(resolve, reject){
+      resolve(onAuthStateChanged(auth, async function(user){
+        const { displayName, phoneNumber, uid } = user.providerData[0];
+  
+        try {
+          await axios.post('https://pos.eocambo.com/api/contact/create', {
+            "business_id": '16',
+            "type": "customer",
+            "name": displayName || phoneNumber,
+            "image_url": "",
+            "uid": uid,
+            "fcm_token": "",
+            "created_by": '42',
+            "total_rp": 0,
+            "total_rp_used": 0,
+            "total_rp_expired": 0,
+            "is_default": 0,
+            "contact_status": "active"
+          });
+        }catch(err){
+          console.error(err);
+        }
+      }))
+    });
+  }, [onAuthStateChanged])
 
   function handlePhoneNumberChange(value){
     setPhoneNumber(value);
@@ -63,6 +95,8 @@ function Login(props){
       setPhoneNumber('');
       handleVerificationModalVisibleToggle();
       props.navigation.navigate('Home');
+      await login();
+      props.navigation.navigate('Home');
     }catch(err){
       handleVerificationModalVisibleToggle();
       alert("Please try again");
@@ -88,16 +122,18 @@ function Login(props){
       const { access_token } = facebookResponse.params; 
       const credential = FacebookAuthProvider.credential(access_token);
       signInWithCredential(auth, credential);
+      login();
     }
-  }, [facebookResponse]);
+  }, [facebookResponse], login);
 
   useEffect(function(){
     if(googleResponse?.type === 'success'){
       const { id_token } = googleResponse.params;
       const credential = GoogleAuthProvider.credential(id_token);
       signInWithCredential(auth, credential);
+      login();
     }
-  }, [googleResponse]);
+  }, [googleResponse, login]);
 
   function handleGoBack(){
     props.navigation.goBack();

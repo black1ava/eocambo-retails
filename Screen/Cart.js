@@ -6,12 +6,16 @@ import { removeFromCart, setTotal } from '../action';
 import ScreenFrame from './Component/ScreenFrame';
 import CartProduct from './Component/CartProduct';
 import { globalStyles } from '../styles/globalStyles';
+import Spinner from './Component/Spinner';
 
 function Cart(props){
 
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false) 
 
   useEffect(function(){
+    
+    setLoading(true);
 
     const products = props.productsInCart
       .filter(product => !product.order)
@@ -34,6 +38,7 @@ function Cart(props){
     }, 0);
 
     props.setTotal(total);
+    setLoading(false);
   
   }, [props.productsInCart, props.products, props.productsInCart.amount]);
 
@@ -61,27 +66,29 @@ function Cart(props){
 
   const cartScreenMarkup = (
     <View style={{ flex: 1 }}>
-      <ScreenFrame navigation={ props.navigation } title="Cart"  hasSearch>
-        <View style={{ padding: 15, flex: 1 }}>
-          <FlatList 
-            data={ products }
-            renderItem={ renderProducts }
-            keyExtractor={ extractProductId }
-          />
-        </View>
-        <View style={ styles.priceContainer }>
-          <View style={ styles.totalContainer }>
-            <Text style={ styles.total }>
-              Total: 
-            </Text>
-            <Text style={ styles.totalPrice }>
-              ${ props.total }.00
-            </Text>
+      <ScreenFrame navigation={ props.navigation } title="Cart"  hasSearch loading={ loading }>
+        <View style={{ flex: 1 }}>
+          <View style={{ padding: 15, flex: 1 }}>
+            <FlatList 
+              data={ products }
+              renderItem={ renderProducts }
+              keyExtractor={ extractProductId }
+            />
           </View>
-          <View style={ styles.checkoutButton }>
-            <TouchableOpacity>
-              <Text style={ styles.checkoutButtonText } onPress={ handleContinueToCart }>Continue To Checkout</Text>
-            </TouchableOpacity>
+          <View style={ styles.priceContainer }>
+            <View style={ styles.totalContainer }>
+              <Text style={ styles.total }>
+                Total: 
+              </Text>
+              <Text style={ styles.totalPrice }>
+                ${ props.total }.00
+              </Text>
+            </View>
+            <View style={ styles.checkoutButton }>
+              <TouchableOpacity>
+                <Text style={ styles.checkoutButtonText } onPress={ handleContinueToCart }>Continue To Checkout</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </ScreenFrame>
@@ -92,7 +99,7 @@ function Cart(props){
     <>
     {
       products.length === 0 ? (
-        <ScreenFrame navigation={ props.navigation } title="Cart"  hasSearch>
+        <ScreenFrame navigation={ props.navigation } title="Cart"  hasSearch hasGoToCart>
           <View style={ globalStyles.center }>
             <Text style={{ ...globalStyles.textBold, ...globalStyles.title }}>No item in cart</Text>
           </View>

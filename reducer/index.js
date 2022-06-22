@@ -1,11 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
 
-let initialState= {
+const initialState= {
   products: [],
   productsInCart: [],
   user: null,
-  total: 0
-}
+  total: 0,
+  companyInfo: [],
+  promotions: [],
+  loginAttempt: 0
+};
 
 export default function reducer(state = initialState, action){
   switch(action.type){
@@ -56,7 +59,8 @@ export default function reducer(state = initialState, action){
               id: uuidv4(),
               productId: action.productId,
               amount: action.amount,
-              order: false
+              order: false,
+              variations_id: action.variations_id
             }
           ]
         };
@@ -136,6 +140,35 @@ export default function reducer(state = initialState, action){
                 order: true
               }
             })
+          };
+
+        case 'SET_COMPANY_INFO':
+          return {
+            ...state,
+            companyInfo: action.payload
+          };
+
+        case 'SET_PROMOTIONS':
+          return {
+            ...state,
+            promotions: action.payload
+          };
+
+        case 'UPDATE_PROFILE':
+          return {
+            ...state,
+            user: {
+              ...state.user,
+              name: action.payload.name,
+              email: action.payload.email,
+              mobile: action.payload.mobile
+            }
+          };
+
+        case 'SET_LOGIN_ATTEMPT':
+          return {
+            ...state,
+            loginAttempt: state.loginAttempt + 1
           };
 
     default:

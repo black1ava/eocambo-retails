@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native';
 
 import NavBar from './NavBar';
+import Spinner from './Spinner';
 
 function NavBarScreenFrame(props){
 
@@ -12,6 +13,7 @@ function NavBarScreenFrame(props){
 
   return(
     <View style={ styles.content }>
+      <Spinner visible={ props.loading }/>
       { props.title ? headerMarkup : <View></View> }
       {/* { headerMarkup} */}
       { props.children }

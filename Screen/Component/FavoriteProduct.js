@@ -11,7 +11,7 @@ function FavoriteProduct(props){
   return (
     <TouchableOpacity onPress={ handlePress }>
       <View style={ styles.favoriteProductContent }>
-        <Image style={ styles.smallImage } source={{ uri: props.product.source }}/>
+        <Image style={ styles.smallImage } source={{ uri: props.product.uri }}/>
         <View style={ styles.productInfo }>
           <View style={ styles.favoriteContainer }>
             <TouchableOpacity onPress={ props.onRemove }>
@@ -20,7 +20,7 @@ function FavoriteProduct(props){
           </View>
           <View style={ styles.productDetails}>
             <Text style={ globalStyles.title }>{ props.product.name }</Text>
-            <Text style={{ ...globalStyles.title, ...globalStyles.textRed }}>{ props.product.price }</Text>
+            <Text style={{ ...globalStyles.title, ...globalStyles.textRed }}>${ parseInt(props.product.price) }.00</Text>
           </View>
         </View>
       </View>

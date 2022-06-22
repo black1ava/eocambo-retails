@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { View, Text, FlatList, SafeAreaView } from 'react-native';
 import 'react-native-get-random-values';
 import Category from '../../Shared/Category';
@@ -6,6 +7,18 @@ import { globalStyles } from '../../styles/globalStyles'
 import Seperator from '../../Shared/Seperator';
 
 function Categories(){
+
+  const [sortedCategories, setSortedCategories] = useState([]);
+
+  useEffect(function(){
+    const sortedCategories = categories.sort(function(current, next){
+      return current.content > next.content;
+    })
+    
+    setSortedCategories(sortedCategories);
+  }, [categories]);
+
+  // console.log(sortedCategories);
 
   function renderCategory(props){
     return(
@@ -22,7 +35,7 @@ function Categories(){
       <Text style={ globalStyles.title }>Categories</Text>
       <SafeAreaView>
         <FlatList 
-          data={ categories }
+          data={ sortedCategories }
           renderItem={ renderCategory }
           keyExtractor={ extractCategoryId }
           horizontal

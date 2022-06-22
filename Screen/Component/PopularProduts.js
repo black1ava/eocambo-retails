@@ -4,13 +4,14 @@ import { popularProducts } from '../../Shared/popularProducts';
 import Product from '../../Shared/Product';
 import Seperator from '../../Shared/Seperator';
 
-function PopularProducts(){
+function PopularProducts(props){
 
-  function renderProducts(props){
+  function renderProducts({ item }){
     return (<Product 
-      source={ props.item.source }
-      name={ props.item.name }
-      price={ props.item.price }
+      source={ item.source }
+      name={ item.name }
+      price={ item.price }
+      navigation={ props.navigation }
     />)
   }
 

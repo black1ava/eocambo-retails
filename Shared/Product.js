@@ -1,10 +1,15 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { globalStyles } from '../styles/globalStyles';
-
 function Product(props){
+
+
+  function handlePress(){
+    props.navigation.navigate('Product details', props);
+  }
+
   return(
-    <TouchableOpacity style={ styles.product }>
-      <Image style={ globalStyles.smallImage } source={props.source}/>
+    <TouchableOpacity style={ styles.product } onPress={ handlePress }>
+      <Image style={ globalStyles.smallImage } source={{ uri: props.source }}/>
       <View style={ globalStyles.mh5 }>
         <Text style={{ ...globalStyles.textBold, ...globalStyles.mv10 }}>{ props.name }</Text>
         <Text style={ globalStyles.textBold }>Starting at: 

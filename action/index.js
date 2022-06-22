@@ -19,11 +19,12 @@ export function addToFavoriteInactive(payload){
   };
 }
 
-export function addToCart({ productId, amount }){
+export function addToCart({ productId, amount, variations_id }){
   return {
     type: 'ADD_TO_CART',
     productId,
-    amount
+    amount,
+    variations_id
   };
 }
 
@@ -81,4 +82,22 @@ export function setCompanyInfo(payload){
     type: 'SET_COMPANY_INFO',
     payload
   };
+}
+
+export function setPromotions(payload){
+  return {
+    type: 'SET_PROMOTIONS',
+    payload
+  }
+}
+
+export function updateProfile(payload){
+  return {
+    type: 'UPDATE_PROFILE',
+    payload
+  }
+}
+
+export function setLoginAttempt(){
+  return { type: 'SET_LOGIN_ATTEMPT' };
 }

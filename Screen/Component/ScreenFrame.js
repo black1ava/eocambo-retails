@@ -1,67 +1,121 @@
 import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { Ionicons, AntDesign, Feather } from '@expo/vector-icons';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import { globalStyles } from '../../styles/globalStyles';
+import Spinner from './Spinner';
 
 
-function ScreenFrame(props){
+function ScreenFrame({
+  productsInCart,
+  navigation,
+  hasGoToCart,
+  title,
+  hasSearch,
+  hasSearchField,
+  children,
+  searchText,
+  onSearchTextChange,
+  backgroundColor = '#FFCC8F',
+  loading
+}){
 
-  const [productsInCart, setProductsInCart] = useState(0);
+  const [_productsInCart, set_ProductsInCart] = useState(0);
 
   useEffect(function(){
-    setProductsInCart(props.productsInCart.filter(product => !product.order).length);
-  }, [props.productsInCart]);
+    set_ProductsInCart(productsInCart.filter(product => !product.order).length);
+  }, [productsInCart]);
 
   function handleBackButton(){
-    props.navigation.goBack();
+    navigation.goBack();
+  }
+
+  function handleGoToSearchButton(){
+    navigation.navigate('Search');
   }
 
   const searchButtonMarkup = (
-    <AntDesign style={ styles.mr10 } name="search1" size={30} color="#4B7BE5" />
+    <TouchableOpacity onPress={ handleGoToSearchButton }>
+      <AntDesign style={ styles.mr10 } name="search1" size={30} color="#4B7BE5" />
+    </TouchableOpacity>
   );
   
   function handleToCartPress(){
-    props.navigation.navigate('Cart');
+    navigation.navigate('Cart');
   }
 
   const inCartTextMarkeup = (
     <View style={ styles.inCartContainer }>
-      <Text style={ styles.inCartText }>{ productsInCart }</Text>
+      <Text style={ styles.inCartText }>{ _productsInCart }</Text>
     </View>
   );
 
-  const goToCartMarkUp = props.hasGoToCart && (
+  const goToCartMarkUp = hasGoToCart && (
     <TouchableOpacity onPress={ handleToCartPress }>
       <Feather name="shopping-cart" size={30} color="#4B7BE5" />
       { productsInCart > 0 && inCartTextMarkeup }
     </TouchableOpacity>
   );
 
+  const titleMarkup = !!title && (
+    <Text 
+      style={{ ...globalStyles.title, ...styles.title }}
+    >
+      { title }
+    </Text>
+  );
+
+  const searchFieldMarkUp = hasSearchField && (
+    <View style={ styles.textInput }>
+      <TextInput 
+        placeholder="Search" 
+        value={ searchText }
+        onChangeText={ onSearchTextChange }
+      />
+    </View>
+  );
+
   return(
     <View style={{ height: '100%' }}>
-      <View style={ styles.header }>
+      <View style={{ ...styles.header, backgroundColor }}>
         <TouchableOpacity style={ styles.mr10 } onPress={ handleBackButton }>
           <Ionicons  name="chevron-back-circle-outline" size={ 38 } color="#4B7BE5" />
         </TouchableOpacity>
-        <Text style={{ ...globalStyles.title, ...styles.title }}>{ props.title }</Text>
+          { titleMarkup }
+          { searchFieldMarkUp }
         <View style={ styles.row }>
-          { props.hasSearch && searchButtonMarkup }
+          { hasSearch && searchButtonMarkup }
           { goToCartMarkUp }
         </View>
       </View>
       <View style={{ flex: 1 }}>
-        { props.children }
+        <Spinner visible={ loading } />
+        { children }
       </View>
     </View>
   );
 }
 
+ScreenFrame.propTypes = {
+  productsInCart: PropTypes.array.isRequired,
+  navigation: PropTypes.object.isRequired,
+  hasGoToCart: PropTypes.bool,
+  title: PropTypes.string,
+  hasSearch: PropTypes.bool,
+  children: PropTypes.element,
+  hasSearchField: PropTypes.bool,
+  searchText: PropTypes.string,
+  onSearchTextChange: PropTypes.func,
+  backgroundColor: PropTypes.string,
+  loading: PropTypes.bool
+};
+
 const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingVertical: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -91,6 +145,13 @@ const styles = StyleSheet.create({
   inCartText: {
     fontSize: 10,
     color: '#fff'
+  },
+  textInput: {
+    backgroundColor: '#fff',
+    width: '70%',
+    borderRadius: 5,
+    paddingVertical: 3,
+    paddingHorizontal: 10
   }
 });
 

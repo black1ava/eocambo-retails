@@ -19,16 +19,20 @@ import {
   addToCart,
   updateToCart
 } from '../action';
+import axios from 'axios';
+import Spinner from './Component/Spinner';
 
 function ProductDetails(props){
   const product = props.route.params;
-  // console.log(props.productsInCart);
-
+  const { id } = product;
+  const uid = props.user?.uid;
+  
   const [isFavorite, setIsFavorite] = useState(product.favorite);
   const [productsInCart, setProductsInCart] = useState(0);
   const [amount, setAmount] = useState(1);
   const [isSelected, setIsSelected] = useState(false);
   const [productInCartId, setProductInCartId] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   LogBox.ignoreAllLogs();
 
@@ -65,7 +69,7 @@ function ProductDetails(props){
     }
   }
 
-  function handleAddToFavoritePress(){
+  async function handleAddToFavoritePress(){
 
     if(props.user === null){
       Alert.alert(
@@ -82,17 +86,21 @@ function ProductDetails(props){
       return;
     }
 
+    setLoading(true);
     if(product.favorite){
       props.addToFavoriteInactive(product.id);
     }else{
       props.addToFavoriteActive(product.id);
     }
 
+    await axios.post(`https://pos.eocambo.com/api/favourites/create/${ uid }/${ id }`);
+
     setIsFavorite(current => !current);
+    setLoading(false);
   }
 
-  function handleAddToCart(){
-
+  async function handleAddToCart(){
+    
     if(props.user === null){
       Alert.alert(
         'Sign In Required!',
@@ -113,11 +121,19 @@ function ProductDetails(props){
       return;
     }
 
+    setLoading(true);
+
+    const response = await axios.get(`https://pos.eocambo.com/api/product/search/${ product.id }`);
+    const { data } = response;
+    const { variations_id } = data.products[0];
+
     if(!!productInCartId){
       props.updateToCart({ id: productInCartId, amount });
     }else{
-      props.addToCart({ productId: product.id, amount });
+      props.addToCart({ productId: product.id, amount, variations_id });
     }
+
+    setLoading(false);
 
     props.navigation.navigate('Cart');
   }
@@ -139,71 +155,74 @@ function ProductDetails(props){
   );
 
   return(
-    <View style={ globalStyles.content }>
-      <Image style={ styles.image } source={{ uri: product.uri }}/>
-      <TouchableOpacity onPress={ handlePress } style={ styles.backButton } >
-        <Ionicons  name="chevron-back-circle-outline" size={ 38 } color="#4B7BE5" />
-      </TouchableOpacity>
-      <TouchableOpacity style={ styles.goToCartButton } onPress={ handleNavigateToCart }>
-        <Feather name="shopping-cart" size={28} color="#4B7BE5" />
-        { productsInCart > 0 && numberInCartMarkup }
-      </TouchableOpacity>
-      <View style={ styles.productInfo }>
-        <View style={ styles.productHeader }>
-          <Text style={{ ...styles.productName, ...globalStyles.title, marginRight: 10 }}>
-            { product.name }
-          </Text>
-          <TouchableOpacity onPress={ handleAddToFavoritePress }>
-            <MaterialIcons name="favorite-border"  size={ 38 } color={ isFavorite ? 'red' : '#4B7BE5' } />
-          </TouchableOpacity>
-        </View>
-        <View style={ styles.productBody }>
-          <Text style={{ ...globalStyles.title, ...globalStyles.textRed }}>${ parseInt(product.price) }.00</Text>
-          <Text style={ globalStyles.textBold }>Description</Text>
-          <ScrollView showsVerticalScrollIndicator={ false }>
-            <Text>{ product.description || 'null' }</Text>
-          </ScrollView>
-          <View>
-            <View style={ styles.selectedOptionsHeader}>
-              <Text style={ globalStyles.textBold }>Select options</Text>
-              <Text style={ globalStyles.textBold}>01 required</Text>
-            </View>
-            <View style={ styles.radioButton }>
-              <TouchableOpacity onPress={ handleIsSelected }>
-                <View style={ styles.radioContent }>
-                    <View style={ styles.selectedName }>
-                      { radioButtonMarkup }
-                      <Text>Normal</Text>
-                    </View>
-                    <Text style={ globalStyles.textRed }>${ parseInt(product.price) }.00</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+    <View style={{ flex: 1 }}>
+      <Spinner visible={ loading }/>
+      <View style={ globalStyles.content }>
+        <Image style={ styles.image } source={{ uri: product.uri }}/>
+        <TouchableOpacity onPress={ handlePress } style={ styles.backButton } >
+          <Ionicons  name="chevron-back-circle-outline" size={ 38 } color="#4B7BE5" />
+        </TouchableOpacity>
+        <TouchableOpacity style={ styles.goToCartButton } onPress={ handleNavigateToCart }>
+          <Feather name="shopping-cart" size={28} color="#4B7BE5" />
+          { productsInCart > 0 && numberInCartMarkup }
+        </TouchableOpacity>
+        <View style={ styles.productInfo }>
+          <View style={ styles.productHeader }>
+            <Text style={{ ...styles.productName, ...globalStyles.title, marginRight: 10 }}>
+              { product.name }
+            </Text>
+            <TouchableOpacity onPress={ handleAddToFavoritePress }>
+              <MaterialIcons name="favorite-border"  size={ 38 } color={ isFavorite ? 'red' : '#4B7BE5' } />
+            </TouchableOpacity>
           </View>
-          <View>
-            <View style={ styles.instructions }>
-              <Text>Special instructions:</Text>
-              <View style={{ borderBottomWidth: 1, borderBottomColor: '#7F8487' }}>
-                <TextInput style={{ fontSize: 14}}/>
+          <View style={ styles.productBody }>
+            <Text style={{ ...globalStyles.title, ...globalStyles.textRed }}>${ parseInt(product.price) }.00</Text>
+            <Text style={ globalStyles.textBold }>Description</Text>
+            <ScrollView showsVerticalScrollIndicator={ false }>
+              <Text>{ product.description || 'null' }</Text>
+            </ScrollView>
+            <View>
+              <View style={ styles.selectedOptionsHeader}>
+                <Text style={ globalStyles.textBold }>Select options</Text>
+                <Text style={ globalStyles.textBold}>01 required</Text>
+              </View>
+              <View style={ styles.radioButton }>
+                <TouchableOpacity onPress={ handleIsSelected }>
+                  <View style={ styles.radioContent }>
+                      <View style={ styles.selectedName }>
+                        { radioButtonMarkup }
+                        <Text>Normal</Text>
+                      </View>
+                      <Text style={ globalStyles.textRed }>${ parseInt(product.price) }.00</Text>
+                  </View>
+                </TouchableOpacity>
               </View>
             </View>
-            <View style={ styles.buttonGroup }>
-            <View style={ styles.setAmount }>
-              <TouchableOpacity onPress={ handleAmountDecrease }>
-                <View>
-                  <AntDesign name="minuscircleo" size={28} color="black" />
+            <View>
+              <View style={ styles.instructions }>
+                <Text>Special instructions:</Text>
+                <View style={{ borderBottomWidth: 1, borderBottomColor: '#7F8487' }}>
+                  <TextInput style={{ fontSize: 14}}/>
                 </View>
-              </TouchableOpacity>
-              <Text style={ styles.amountText }>{ amount }</Text>
-              <TouchableOpacity onPress={ handleAmountIncrease }>
-                <AntDesign name="pluscircleo"  size={28} color="black" />
-              </TouchableOpacity>
-            </View>
-              <TouchableOpacity style={ styles.addToCartButton } onPress={ handleAddToCart }>
-                <Text style={ styles.addToCartButtonText }>
-                  { !!productInCartId ? 'Update To Cart' : 'Add To Cart' }
-                </Text>
-              </TouchableOpacity>
+              </View>
+              <View style={ styles.buttonGroup }>
+              <View style={ styles.setAmount }>
+                <TouchableOpacity onPress={ handleAmountDecrease }>
+                  <View>
+                    <AntDesign name="minuscircleo" size={28} color="black" />
+                  </View>
+                </TouchableOpacity>
+                <Text style={ styles.amountText }>{ amount }</Text>
+                <TouchableOpacity onPress={ handleAmountIncrease }>
+                  <AntDesign name="pluscircleo"  size={28} color="black" />
+                </TouchableOpacity>
+              </View>
+                <TouchableOpacity style={ styles.addToCartButton } onPress={ handleAddToCart }>
+                  <Text style={ styles.addToCartButtonText }>
+                    { !!productInCartId ? 'Update To Cart' : 'Add To Cart' }
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>

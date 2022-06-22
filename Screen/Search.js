@@ -10,9 +10,7 @@ function Search({ navigation }){
   const [searchText, setSearchText] = useState('');
   const [searchProducts, setSearchProducts] = useState([]);
   const products = useSelector(state => state.products);
-
   
-
   function handleSearchTextChange(value){
     setSearchText(value);
 

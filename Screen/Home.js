@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
-import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import * as SplashScreen from 'expo-splash-screen';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 
 import Header from './Component/Header';
 import Categories from './Component/Categories';
@@ -20,27 +20,28 @@ function Home(props){
   const [numberProductsInCart, setNumberProductsInCart] = useState(0);
   const [categories, setCategories] = useState([]);
   const [apiLoaded, setApiLoaded] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(function(){
-
     onAuthStateChanged(Firebase.auth, async function(user){
-      if(user !== null){
-        const name = user.providerData[0]?.displayName;
-        const email = user.providerData[0]?.email;
-        const phoneNumber = user.providerData[0]?.phoneNumber;
-  
-        const _user = {
-          name: name || phoneNumber,
-          email: email || phoneNumber,
-          phoneNumber
-        };
-        props.setUser(_user);
+      let uid = user === null ? 0 : user.providerData[0].uid;
+      if(user !== null){        
+        try {
+          setLoading(true);
+          const response = await axios.get(`https://pos.eocambo.com/api/customer/search/16/${ uid }`);
+          const _user  = response.data.data[0];
+          props.setUser(_user);
+        }catch(error){
+          console.log(error)
+        }finally{
+          setLoading(false);
+        }
       }else{
         props.setUser(null);
       }
 
       await SplashScreen.preventAutoHideAsync();
-      const response = await axios.get('https://pos.eocambo.com/api/products/0/62');
+      const response = await axios.get(`https://pos.eocambo.com/api/products/${ uid }/16`);
       const { products, category } = response.data;
 
       props.addProducts(products.map(function(product){
@@ -69,10 +70,10 @@ function Home(props){
         };
       }));
 
-      const companyInfoResponse = await axios.get('https://pos.eocambo.com/api/company/search/62');
+      const companyInfoResponse = await axios.get('https://pos.eocambo.com/api/company/search/16');
       props.setCompanyInfo(companyInfoResponse.data.data[0]);
 
-      const _response = await axios.get('https://pos.eocambo.com/api/discount/search/62');
+      const _response = await axios.get('https://pos.eocambo.com/api/discount/search/16');
       const { data } = _response;
       const promotions = [];
       for(const key in data){
@@ -108,8 +109,13 @@ function Home(props){
 
       setApiLoaded(true);
     });
-
-  }, [props.addProducts, props.setUser, onAuthStateChanged, props.setPromotions]);
+  }, [
+    props.addProducts, 
+    props.setUser, 
+    onAuthStateChanged, 
+    props.setPromotions, 
+    props.loginAttempt
+  ]);
 
   useEffect(function(){
     setPopularProducts(props.products.filter(function(product){
@@ -137,7 +143,7 @@ function Home(props){
 
   return (
     <View onLayout={ handleLayout } style={ styles.scrollView }>
-      <NavBarScreenFrame navigation={ props.navigation } showNavbar screenName="home">
+      <NavBarScreenFrame navigation={ props.navigation } showNavbar screenName="home" loading={ loading }>
         <Header navigation={ props.navigation } numberInCart={ numberProductsInCart}/>
         <View style={{ ...styles.scrollView, ...styles.content  }}>
           <ScrollView showsVerticalScrollIndicator={ false }>
@@ -180,7 +186,8 @@ function mapStateToProps(state){
   return {
     products: state.products,
     productsInCart: state.productsInCart,
-    promotions: state.promotions
+    promotions: state.promotions,
+    loginAttempt: state.loginAttempt
   };
 }
 

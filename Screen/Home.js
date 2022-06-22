@@ -1,23 +1,17 @@
-import { useEffect } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
+
 import Header from './Component/Header';
 import Categories from './Component/Categories';
 import PopularProducts from './Component/PopularProduts';
 import RecommandedProducts from './Component/RecommandedProducts';
 import NavBar from './Component/NavBar';
-import { connect } from 'react-redux';
-import { toggleHomeMenuActive, inactivateAllMenus } from '../action';
+
 
 function Home(props){
 
-  useEffect(function(){
-    props.inactivateAllMenus();
-    props.toggleHomeMenuActive();
-  }, [props.toggleHomeMenuActive, props.inactivateAllMenus]);
-
   return (
     <View style={ styles.scrollView }>
-      <Header />
+      <Header navigation={ props.navigation }/>
       <View style={{ ...styles.scrollView, ...styles.content  }}>
         <ScrollView showsVerticalScrollIndicator={ false }>
           <View>
@@ -25,7 +19,7 @@ function Home(props){
               <Categories />
             </View>
             <View>
-              <PopularProducts />
+              <PopularProducts navigation={ props.navigation }/>
             </View>
             <View>
               <RecommandedProducts />
@@ -48,15 +42,4 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapDispatchToProps = {
-  toggleHomeMenuActive,
-  inactivateAllMenus
-};
-
-function mapStateToProps(state){
-  return {
-    menus: state.menusActive
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;

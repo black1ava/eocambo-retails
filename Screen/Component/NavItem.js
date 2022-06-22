@@ -1,21 +1,24 @@
-import { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { connect } from 'react-redux';
 
 function NavItem(props){
 
-  const [isActive, setIsActive] = useState(false);
-  
-  useEffect(function(){
-    setIsActive(props.menu[props.name])
-  }, [props.menu, props.name]);
+  function handleNavigate(){
+    
+    if(props.root){
+      props.navigation.navigate('Root', { screen: props.content });
+      return;
+    }
+
+    props.navigation.navigate(props.content);
+  }
 
   return(
-    <TouchableOpacity>
+    <TouchableOpacity onPress={ handleNavigate }>
       <View style={ styles.navItem }>
-        <MaterialIcons name={ props.icon } size={24} color={ isActive ? '#4B7BE5' : 'black' } />
-        <Text style={{ color: isActive ? '#4B7BE5' : 'black' }}>{ props.content }</Text>
+        <MaterialIcons name={ props.icon } size={24} color={ props.screenName === props.name ? '#4B7BE5' : 'black' } />
+        <Text style={{ color: props.screenName === props.name ? '#4B7BE5' : 'black' }}>{ props.content }</Text>
       </View>
     </TouchableOpacity>
   );

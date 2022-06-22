@@ -1,32 +1,28 @@
 import { View, StyleSheet, StatusBar } from 'react-native';
-import Home from './Screen/Home';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit';
+import 'react-native-get-random-values';
+import 'react-native-gesture-handler';
+
 import reducer from './reducer';
+import Navigation from './Navigation';
 
-
-const Stack = createNativeStackNavigator();
-const store = configureStore({ reducer });
+const store = configureStore({ 
+  reducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+    immutableCheck: false,
+    serializableCheck: false,
+  })
+});
 
 export default function App() {
+
   return (
     <Provider store={ store }>
-      <View style={ styles.container }>
+      <View style={styles.container }>
         <StatusBar barStyle={'light-content'} backgroundColor='#0AA1DD' />
-        <NavigationContainer>
-          <Stack.Navigator
-            screenOptions={{
-              headerShown: false
-            }}
-          >
-            <Stack.Screen 
-              name="Home"
-              component={ Home }
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <Navigation />
       </View>
     </Provider>
   );

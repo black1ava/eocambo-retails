@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { globalStyles } from '../../styles/globalStyles';
+import Spinner from './Spinner';
 
 
 function ScreenFrame({
@@ -16,7 +17,9 @@ function ScreenFrame({
   hasSearchField,
   children,
   searchText,
-  onSearchTextChange
+  onSearchTextChange,
+  backgroundColor = '#FFCC8F',
+  loading
 }){
 
   const [_productsInCart, set_ProductsInCart] = useState(0);
@@ -76,7 +79,7 @@ function ScreenFrame({
 
   return(
     <View style={{ height: '100%' }}>
-      <View style={ styles.header }>
+      <View style={{ ...styles.header, backgroundColor }}>
         <TouchableOpacity style={ styles.mr10 } onPress={ handleBackButton }>
           <Ionicons  name="chevron-back-circle-outline" size={ 38 } color="#4B7BE5" />
         </TouchableOpacity>
@@ -88,6 +91,7 @@ function ScreenFrame({
         </View>
       </View>
       <View style={{ flex: 1 }}>
+        <Spinner visible={ loading } />
         { children }
       </View>
     </View>
@@ -103,7 +107,9 @@ ScreenFrame.propTypes = {
   children: PropTypes.element,
   hasSearchField: PropTypes.bool,
   searchText: PropTypes.string,
-  onSearchTextChange: PropTypes.func
+  onSearchTextChange: PropTypes.func,
+  backgroundColor: PropTypes.string,
+  loading: PropTypes.bool
 };
 
 const styles = StyleSheet.create({

@@ -11,7 +11,6 @@ function ProfileMenuItem(props){
     if(props.content === 'Logout'){
       const auth = Firebase.auth;
       await signOut(auth);
-      props.navigation.navigate('Home');
       return; 
     }
 

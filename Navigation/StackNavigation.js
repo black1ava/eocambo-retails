@@ -9,9 +9,11 @@ import Checkout from '../Screen/Checkout';
 import DrawerNavigation from './DrawerNavigation';
 import Search from '../Screen/Search';
 import Login from '../Screen/Login';
+import Notification from '../Screen/Notification';
+import PromotionDetails from '../Screen/PromotionDetails';
+import EditProfile from '../Screen/EditProfile';
 
 const Stack = createNativeStackNavigator();
-
 function StackNavigation(){
 
   return (
@@ -78,6 +80,18 @@ function StackNavigation(){
       <Stack.Screen 
         name="Login"
         component={ Login }
+      />
+      <Stack.Screen 
+        name="Notification"
+        component={ Notification }
+      />
+      <Stack.Screen 
+        name="PromotionDetails"
+        component={ PromotionDetails }
+      />
+      <Stack.Screen 
+        name="EditProfile"
+        component={ EditProfile }
       />
     </Stack.Navigator>
   );

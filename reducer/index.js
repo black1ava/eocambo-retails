@@ -5,7 +5,9 @@ const initialState= {
   productsInCart: [],
   user: null,
   total: 0,
-  companyInfo: []
+  companyInfo: [],
+  promotions: [],
+  loginAttempt: 0
 };
 
 export default function reducer(state = initialState, action){
@@ -57,7 +59,8 @@ export default function reducer(state = initialState, action){
               id: uuidv4(),
               productId: action.productId,
               amount: action.amount,
-              order: false
+              order: false,
+              variations_id: action.variations_id
             }
           ]
         };
@@ -143,6 +146,29 @@ export default function reducer(state = initialState, action){
           return {
             ...state,
             companyInfo: action.payload
+          };
+
+        case 'SET_PROMOTIONS':
+          return {
+            ...state,
+            promotions: action.payload
+          };
+
+        case 'UPDATE_PROFILE':
+          return {
+            ...state,
+            user: {
+              ...state.user,
+              name: action.payload.name,
+              email: action.payload.email,
+              mobile: action.payload.mobile
+            }
+          };
+
+        case 'SET_LOGIN_ATTEMPT':
+          return {
+            ...state,
+            loginAttempt: state.loginAttempt + 1
           };
 
     default:

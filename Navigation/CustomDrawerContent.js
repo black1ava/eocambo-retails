@@ -15,9 +15,6 @@ function CustomDrawerContent(props){
 
   const user = useSelector(state => state.user);
 
-
-  console.log(user);
-
   const authDrawerItem = user === null ? (
     <DrawerItem 
       label="Login"
@@ -28,7 +25,6 @@ function CustomDrawerContent(props){
       label="Log out"
       onPress={ async () => {
         await signOut(auth);
-        props.navigation.navigate('Home');
       } }
     />
   );

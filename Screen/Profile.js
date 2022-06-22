@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Image } from 'react-native'
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native'
 import { globalStyles } from '../styles/globalStyles';
 import NavBar from './Component/NavBar';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -14,22 +14,24 @@ import NavBarScreenFrame from './Component/NavBarScreenFrame';
 function Profile(props){
 
   const [menusProfile, setMenusProfile] = useState(menus);
-  const [email, setEmail] = useState('');
+  const [uid, setUid] = useState('');
   const [userName, setUserName] = useState('');
   const [initial, setInitial] = useState(null);
   const user = useSelector(state => state.user);
-  const providerData = user?.providerData;
 
   useEffect(function(){
-    if(!!providerData){
-      const { email, displayName, phoneNumber } = providerData[0];
-      setEmail(email || phoneNumber);
-      setUserName(displayName || phoneNumber);
-      if(!!displayName){
-        setInitial(displayName[0].toUpperCase());
+    if(user !== null){
+      const { name, uid } = user;
+      setUid(uid);
+      setUserName(name);
+      
+      const regExp = new RegExp('^[\+0-9]+');
+  
+      if(!regExp.test(name)){
+        setInitial(name[0]?.toUpperCase());
       }
     }
-  }, [providerData]);
+  }, [user]);
   
 
   useEffect(function(){
@@ -40,7 +42,7 @@ function Profile(props){
       });
       const updateProfileMenus = [
         ...removeProfileMenus,
-        { id: uuidv4(), name: 'notifications', icon: 'notifications', content: 'Notifications' },
+        { id: uuidv4(), name: 'notifications', icon: 'notifications', content: 'Notification' },
         { id: uuidv4(), name: 'settings', icon: 'settings', content: 'Settings' },
         { id: uuidv4(), name: 'logout', icon: 'logout', content: 'Logout' }
       ];
@@ -48,6 +50,10 @@ function Profile(props){
       return updateProfileMenus;
     });
   }, []);
+
+  function handleNavigateToSettings(){
+    props.navigation.navigate('Settings');
+  }
 
 
   function renderMenu({ item }){
@@ -67,6 +73,10 @@ function Profile(props){
     props.navigation.navigate('Login');
   }
 
+  function handleEditProfile(){
+    props.navigation.navigate('EditProfile');
+  }
+
   const initialText = !!initial ? (
     <Text style={ styles.initialText }>{ initial }</Text>
     ) : (
@@ -84,11 +94,13 @@ function Profile(props){
               </View>
             </View>
             <View style={ styles.settings }>
-              <MaterialIcons name="settings" size={24} color="black" />
+              <TouchableOpacity onPress={ handleNavigateToSettings }>
+                <MaterialIcons name="settings" size={24} color="white" />
+              </TouchableOpacity>
             </View>
-            <Text style={{ color: '#fff'}}>{ email }</Text>
+            <Text style={{ color: '#fff'}}>{ uid }</Text>
             <Text style={ styles.userTextInfo }>{ userName }</Text>
-            <Button backgroundColor="#fff" title="Edit profiles" />
+            <Button backgroundColor="#fff" title="Edit profiles" onAction={ handleEditProfile }/>
           </View>
         </View>
         <View style={{ ...globalStyles.content, ...styles.menuSection }}>

@@ -1,10 +1,14 @@
 import { v4 as uuidv4 } from 'uuid';
 
-let initialState= {
+const initialState= {
   products: [],
   productsInCart: [],
-  user: null
-}
+  user: null,
+  total: 0,
+  companyInfo: [],
+  promotions: [],
+  loginAttempt: 0
+};
 
 export default function reducer(state = initialState, action){
   switch(action.type){
@@ -54,9 +58,27 @@ export default function reducer(state = initialState, action){
             {
               id: uuidv4(),
               productId: action.productId,
-              amount: action.amount
+              amount: action.amount,
+              order: false,
+              variations_id: action.variations_id
             }
           ]
+        };
+
+
+      case 'UPDATE_TO_CART':
+        return {
+          ...state,
+          productsInCart: state.productsInCart.map(function(productInCart){
+            if(productInCart.id === action.id){
+              return {
+                ...productInCart,
+                amount: action.amount
+              };
+            }
+
+            return productInCart
+          })
         };
 
         case 'REMOVE_FROM_CART':
@@ -101,6 +123,52 @@ export default function reducer(state = initialState, action){
           return {
             ...state,
             user: action.payload
+          };
+
+        case 'SET_TOTAL':
+          return {
+            ...state,
+            total: action.payload
+          };
+
+        case 'ORDER_PRODUCTS_IN_CART':
+          return {
+            ...state,
+            productsInCart: state.productsInCart.map(function(productInCart){
+              return {
+                ...productInCart,
+                order: true
+              }
+            })
+          };
+
+        case 'SET_COMPANY_INFO':
+          return {
+            ...state,
+            companyInfo: action.payload
+          };
+
+        case 'SET_PROMOTIONS':
+          return {
+            ...state,
+            promotions: action.payload
+          };
+
+        case 'UPDATE_PROFILE':
+          return {
+            ...state,
+            user: {
+              ...state.user,
+              name: action.payload.name,
+              email: action.payload.email,
+              mobile: action.payload.mobile
+            }
+          };
+
+        case 'SET_LOGIN_ATTEMPT':
+          return {
+            ...state,
+            loginAttempt: state.loginAttempt + 1
           };
 
     default:

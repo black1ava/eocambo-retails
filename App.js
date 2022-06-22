@@ -18,22 +18,6 @@ const store = configureStore({
 
 export default function App() {
 
-  // const [user, setUser] = useState();
-
-  // const auth = getAuth();
-
-  // useEffect(function(){
-  //   const unsubscribeFromAuthStatusChanged = onAuthStateChanged(auth, function(user){
-  //     if(user){
-  //       setUser(user);
-  //     }else{
-  //       setUser(undefined);
-  //     }
-  //   });
-
-  //   return unsubscribeFromAuthStatusChanged();
-  // }, []);
-
   return (
     <Provider store={ store }>
       <View style={styles.container }>

@@ -1,94 +1,65 @@
 import { useState, useEffect } from 'react'; 
-import { View, Text } from 'react-native';
+import { View, Text, FlatList } from 'react-native';
+import axios from 'axios';
 import { useSelector } from 'react-redux';
 
 import NavBarScreenFrame from './Component/NavBarScreenFrame';
 import { globalStyles } from '../styles/globalStyles';
-import Card from './Component/Card';
+import OrderCard from './Component/OrderCard';
 
 function Orders(props){
 
   const [orderProducts, setOrderProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const fromDrawer = props.route.params?.fromDrawer;
-  const productsInCart = useSelector(state => state.productsInCart);
-  const products = useSelector(state => state.products);
-  const total  = useSelector(state => state.total);
+  const user = useSelector(state => state.user);
 
   useEffect(function(){
-    const _products = productsInCart
-      .filter(product => product.order)
-      .map(function(productInCart){
-        return {
-          ...productInCart,
-          product: products.find(product => product.id === productInCart.productId)
+    
+    async function getOrders(){
+      try {
+        setLoading(true);
+        const response = await axios.get(`https://pos.eocambo.com/api/order/searchSpecific/${ user.id }`);
+        const _response = await axios.get(`https://pos.eocambo.com/api/order/search/${ user.id }`);
+        const { data } = response.data;
+        const _data = _response.data.data;
+        
+        if(data !== [] && _data !== []){
+          data.forEach((d, i) => {
+            d.date = _data[i]?.created_at;
+            d.status = _data[i]?.status;
+          });
         }
-      });
 
-    const orderProdcts = _products.map(function(product){
-      return {
-        name: `${ product.amount}x ${ product.product.name }`,
-        text: {
-          value: `$${ parseInt(product.product.price * product.amount) }.00`,
-          color: 'red'
-        }
+        console.log("data", data);
+        setOrderProducts(data);
+      }catch(err){
+        console.log(err);
+      }finally{
+        setLoading(false);
       }
-    });
+    }
 
-    setOrderProducts(orderProdcts);
+    getOrders();
 
-  }, [productsInCart, products]);
+  }, []);
+
 
   const orderScreenMarkup = (
-    <Card 
-      data={[
-        {
-          title: '',
-          items: [
-            {
-              name: 'Your order status',
-              text: {
-                value: 'Requesting',
-              }
-            },
-            {
-              name: 'Date',
-              text: {
-                value: `${ String((new Date()).getDate()).padStart(2, '0') } / ${ String((new Date() ).getMonth() + 1).padStart(2, '0') } / ${ (new Date()).getFullYear() }`
-              }
-            },
-            {
-              name: 'ID Number',
-              text: {
-                value: Math.floor(Math.random() * 1000000 + 1),
-              }
-            },
-          ]
-        },
-        {
-          title: 'Order items',
-          items: orderProducts
-        },
-        {
-          title: '',
-          items: [
-            {
-              name: 'Delivery fee',
-              text: {
-                value: '$2.00',
-                color: 'red'
-              }
-            },
-            {
-              name: 'Total(US)',
-              text: {
-                value: `${ total + 2 }.00`,
-                color: 'red'
-              }
-            }
-          ]
-        }
-      ]}
+    <FlatList 
+      data={ orderProducts }
+      renderItem={ ({ item }) => (
+        <OrderCard 
+          status={ item.status } 
+          date={ item.date } 
+          quantity={ item.quantity }
+          id={ item.transaction_id } 
+          name={ item.name } 
+          total={ Number(item.price) * Number(item.quantity) } 
+        />
+      )}
+      keyExtractor={ product => product.transaction_id }
     />
   );
 
@@ -96,6 +67,7 @@ function Orders(props){
     <NavBarScreenFrame 
       navigation={ props.navigation } 
       screenName="orders" 
+      loading={ loading }
       showNavbar={ !fromDrawer }
       title="My orders"
     >

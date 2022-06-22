@@ -21,5 +21,15 @@ export const globalStyles = StyleSheet.create({
   },
   textRed: {
     color: '#F24C4C'
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'space-between',
+    marginHorizontal: 8
+  },
+  center: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1
   }
 });

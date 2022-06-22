@@ -1,21 +1,15 @@
-import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Image, StyleSheet } from 'react-native';
 import { Entypo, Feather } from '@expo/vector-icons'; 
 import SearchButton from '../../Shared/SearchButton';
 
-function Header(props){
 
-  function handleGoToCardClick(){
-    props.navigation.navigate("Cart");
-  }
-
+function Header(){
   return(
     <View style={ styles.header }>
       <View style={ styles.headerSection }>
         <Entypo name="menu" size={28} color="#4B7BE5" />
         <Image style={ styles.logo } source={require('../../assets/eocambo.png')} />
-        <TouchableOpacity onPress={ handleGoToCardClick }>
-          <Feather name="shopping-cart" size={28} color="#4B7BE5" />
-        </TouchableOpacity>
+        <Feather name="shopping-cart" size={28} color="#4B7BE5" />
       </View>
       <SearchButton />
     </View>

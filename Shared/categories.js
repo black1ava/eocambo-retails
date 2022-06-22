@@ -4,73 +4,74 @@ import {
   FontAwesome, 
   MaterialCommunityIcons, 
   FontAwesome5,
+  AntDesign
 } from '@expo/vector-icons'
 import { v4 as uuidv4 } from 'uuid';
 
 export const categories = [
   {
-    id: 'education',
+    id: uuidv4(),
     icon: <MaterialIcons name="cast-for-education" size={24} color="black" />,
     content: 'Education'
   },
   {
-    id: 'ecommerce',
+    id: uuidv4(),
     icon: <Foundation name="burst-sale" size={24} color="black" />,
     content: 'Ecommerce'
   },
   {
-    id: 'real-estate',
+    id: uuidv4(),
     icon: <FontAwesome name="building-o" size={24} color="black" />,
     content: 'Real estate'
   },
   {
-    id: 'pharmacy',
+    id: uuidv4(),
     icon: <MaterialIcons name="medical-services" size={24} color="black" />,
-    content: 'Pharmacy'
+    content: 'Medical service'
   },
   {
-    id: 'gym',
+    id: uuidv4(),
     icon: <MaterialCommunityIcons name="weight-lifter" size={24} color="black" />,
     content: 'Gym'
   },
   {
-    id: 'beauty-and-salon',
+    id: uuidv4(),
     icon: <MaterialIcons name="face-retouching-natural" size={24} color="black" />,
     content: 'Beauty and salon'
   },
   {
-    id: 'tourism',
+    id: uuidv4(),
     icon: <MaterialIcons name="tour" size={24} color="black" />,
     content: 'Tourism'
   },
   {
-    id: 'consultancy-firm',
+    id: uuidv4(),
     icon: <FontAwesome5 name="building" size={24} color="black" />,
     content: 'Consultancy firm'
   },
   {
-    id: 'transportation',
-    icon: <MaterialIcons name="emoji-transportation" size={24} color="black" />,
-    content: 'Transportation'
+    id: uuidv4(),
+    icon: <MaterialIcons name="cleaning-services" size={24} color="black" />,
+    content: 'Cleaning service'
   },
   {
-    id: 'desgin',
+    id: uuidv4(),
+    icon: <MaterialIcons name="emoji-transportation" size={24} color="black" />,
+    content: 'Transportation rental'
+  },
+  {
+    id: uuidv4(),
     icon: <MaterialIcons name="design-services" size={24} color="black" />,
     content: 'Design'
   },
   {
-    id: 'cooking',
-    icon: <MaterialCommunityIcons name="food-turkey" size={24} color="black" />,
-    content: 'Cooking'
+    id: uuidv4(),
+    icon: <AntDesign name="hearto" size={24} color="black" />,
+    content: 'Dating app'
   },
   {
-    id: 'pet',
-    icon: <FontAwesome5 name="dog" size={24} color="black" />,
-    content: 'Pet'
-  },
-  {
-    id: 'service-provider',
-    icon: <FontAwesome5 name="hands-helping" size={24} color="black" />,
-    content: 'Service Provider'
+    id: uuidv4(),
+    icon: <MaterialCommunityIcons name="application-settings-outline" size={24} color="black" />,
+    content: 'Other services'
   }
 ];

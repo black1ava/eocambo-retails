@@ -10,6 +10,7 @@ import Button from '../Shared/Button';
 import { menus } from '../Shared/menus';
 import ProfileMenuItem from './Component/ProfileMenuItem';
 import NavBarScreenFrame from './Component/NavBarScreenFrame';
+import i18n from '../Translations';
 
 function Profile(props){
 
@@ -17,7 +18,8 @@ function Profile(props){
   const [uid, setUid] = useState('');
   const [userName, setUserName] = useState('');
   const [initial, setInitial] = useState(null);
-  const user = useSelector(state => state.user);
+  const user = useSelector(state => state.root.user);
+  const code = useSelector(state => state.root.code);
 
   useEffect(function(){
     if(user !== null){
@@ -40,16 +42,40 @@ function Profile(props){
       const removeProfileMenus = currentMenus.filter(function(menu){
         return menu.name !== 'profile'
       });
+
       const updateProfileMenus = [
         ...removeProfileMenus,
-        { id: uuidv4(), name: 'notifications', icon: 'notifications', content: 'Notification' },
-        { id: uuidv4(), name: 'settings', icon: 'settings', content: 'Settings' },
-        { id: uuidv4(), name: 'logout', icon: 'logout', content: 'Logout' }
+        { 
+          id: uuidv4(), 
+          name: 'notifications', 
+          icon: 'notifications', 
+          content: 'menus.Notification', 
+          route: 'Notification' 
+        },
+        { 
+          id: uuidv4(), 
+          name: 'settings', 
+          icon: 'settings', 
+          content: 'menus.Settings', 
+          route: 'Settings' 
+        },
+        { 
+          id: uuidv4(), 
+          name: 'logout', 
+          icon: 'logout', 
+          content: 'menus.Logout', 
+          route: 'Logout' 
+        }
       ];
 
-      return updateProfileMenus;
+      return updateProfileMenus.map(function(menu){
+        return {
+          ...menu,
+          content: i18n.t(menu.content)
+        }
+      });
     });
-  }, []);
+  }, [code]);
 
   function handleNavigateToSettings(){
     props.navigation.navigate('Settings');
@@ -62,6 +88,7 @@ function Profile(props){
       content={ item.content }
       name={ item.name }
       navigation={ props.navigation }
+      route={ item.route }
     />
   }
 
@@ -100,7 +127,7 @@ function Profile(props){
             </View>
             <Text style={{ color: '#fff'}}>{ uid }</Text>
             <Text style={ styles.userTextInfo }>{ userName }</Text>
-            <Button backgroundColor="#fff" title="Edit profiles" onAction={ handleEditProfile }/>
+            <Button backgroundColor="#fff" title={ i18n.t('settings.Edit Profile') } onAction={ handleEditProfile }/>
           </View>
         </View>
         <View style={{ ...globalStyles.content, ...styles.menuSection }}>
@@ -180,9 +207,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
     marginTop: 10
   },
-  navbarSection: {
-    paddingHorizontal: 15
-  },
+  // navbarSection: {
+  //   paddingHorizontal: 2
+  // },
   logo: {
     width: 80,
     height: 30

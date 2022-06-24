@@ -37,7 +37,7 @@ Promotion.propTypes = {
 
 const styles = StyleSheet.create({
   promotionContainer: {
-    marginVertical: 20,
+    marginVertical: 10,
     marginHorizontal: 20,
     backgroundColor: '#FFCC8F',
     padding: 20,

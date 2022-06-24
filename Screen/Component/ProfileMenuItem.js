@@ -8,13 +8,13 @@ function ProfileMenuItem(props){
 
   async function handlePress(){
 
-    if(props.content === 'Logout'){
+    if(props.route === 'Logout'){
       const auth = Firebase.auth;
       await signOut(auth);
       return; 
     }
 
-    props.navigation.navigate(props.content);
+    props.navigation.navigate(props.route);
   }
 
   return (

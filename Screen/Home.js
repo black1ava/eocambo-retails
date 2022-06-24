@@ -4,14 +4,17 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import * as SplashScreen from 'expo-splash-screen';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { usePreventScreenCapture } from 'expo-screen-capture'
 
 import Header from './Component/Header';
 import Categories from './Component/Categories';
 import NavBar from './Component/NavBar';
 import Products from './Component/Products';
-import { addProducts, setUser, setCompanyInfo, setPromotions } from '../action';
+import { addProducts, setUser, setCompanyInfo, setPromotions, setOrderType, setSlides } from '../action';
 import * as Firebase from '../firebase'
 import NavBarScreenFrame from './Component/NavBarScreenFrame';
+import i18n from '../Translations';
+import HomeSlide from './Component/HomeSlide';
 
 
 function Home(props){
@@ -21,6 +24,10 @@ function Home(props){
   const [categories, setCategories] = useState([]);
   const [apiLoaded, setApiLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  i18n.locale = props.code;
+
+  usePreventScreenCapture();
 
   useEffect(function(){
     onAuthStateChanged(Firebase.auth, async function(user){
@@ -44,7 +51,7 @@ function Home(props){
       const response = await axios.get(`https://pos.eocambo.com/api/products/${ uid }/16`);
       const { products, category } = response.data;
 
-      props.addProducts(products.map(function(product){
+      props.addProducts(products.filter(product => product.price > 0).map(function(product){
         return {
           id: product.id,
           name: product.name,
@@ -80,7 +87,7 @@ function Home(props){
         const { 
           id, 
           name, 
-          image, 
+          image_url, 
           created_at, 
           starts_at, 
           ends_at, 
@@ -93,7 +100,7 @@ function Home(props){
           promotions.push({
             id, 
             name, 
-            image: image || 'https://pos.eocambo.com/img/default.png', 
+            image: image_url || 'https://pos.eocambo.com/img/default.png', 
             created_at, 
             starts_at, 
             ends_at, 
@@ -107,6 +114,27 @@ function Home(props){
 
       props.setPromotions(promotions);
 
+      const slidesResponse = await axios.get('https://pos.eocambo.com/api/slider/search/16');
+      const slides = slidesResponse.data;
+      const _slides = [];
+      for(let key in slides){
+        if(key !== 'success'){
+          _slides.push(slides[key].image);
+        }
+      }
+
+      props.setSlides(_slides);
+
+      const orderTypeResponse = await axios.get('https://pos.eocambo.com/api/ordertype/search/16');
+      const orderType = orderTypeResponse.data.map(function(orderType){
+        return {
+          id: orderType.id,
+          name: orderType.name
+        }
+      });
+
+      props.setOrderType(orderType);
+
       setApiLoaded(true);
     });
   }, [
@@ -114,7 +142,8 @@ function Home(props){
     props.setUser, 
     onAuthStateChanged, 
     props.setPromotions, 
-    props.loginAttempt
+    props.loginAttempt,
+    props.setOrderType
   ]);
 
   useEffect(function(){
@@ -149,13 +178,16 @@ function Home(props){
           <ScrollView showsVerticalScrollIndicator={ false }>
             <View style={ styles.scrollView }>
               <View>
+                <HomeSlide images={ props.slides } />
+              </View>
+              <View>
                 <Categories categories={ categories } navigation={ props.navigation } />
               </View>
               <View>
-                <Products title="Popular Products" products={ popularProducts } navigation={ props.navigation }/>
+                <Products title={ i18n.t('home.Popular Products') } products={ popularProducts } navigation={ props.navigation }/>
               </View>
               <View>
-              <Products title="Recommanded Products" products={ recommandedProducts } navigation={ props.navigation }/>
+              <Products title={ i18n.t('home.Recommanded Products') } products={ recommandedProducts } navigation={ props.navigation }/>
               </View>
             </View>
           </ScrollView>
@@ -168,7 +200,8 @@ function Home(props){
 const styles = StyleSheet.create({
   content: {
     height: '100%',
-    marginHorizontal: 15
+    marginHorizontal: 15,
+    marginVertical: 15
   },
   scrollView: {
     flex: 1,
@@ -179,15 +212,19 @@ const mapDispatchToProps = {
   addProducts,
   setUser,
   setCompanyInfo,
-  setPromotions
+  setPromotions,
+  setOrderType,
+  setSlides
 };
 
 function mapStateToProps(state){
   return {
-    products: state.products,
-    productsInCart: state.productsInCart,
-    promotions: state.promotions,
-    loginAttempt: state.loginAttempt
+    products: state.root.products,
+    productsInCart: state.root.productsInCart,
+    promotions: state.root.promotions,
+    loginAttempt: state.root.loginAttempt,
+    code: state.root.code,
+    slides: state.root.slides
   };
 }
 

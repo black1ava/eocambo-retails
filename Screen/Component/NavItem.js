@@ -7,11 +7,11 @@ function NavItem(props){
   function handleNavigate(){
     
     if(props.root){
-      props.navigation.navigate('Root', { screen: props.content });
+      props.navigation.navigate('Root', { screen: props.route });
       return;
     }
 
-    props.navigation.navigate(props.content);
+    props.navigation.navigate(props.route);
   }
 
   return(
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state){
   return {
-    menu: state.menusActive
+    menu: state.root.menusActive
   };
 }
 

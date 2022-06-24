@@ -32,7 +32,7 @@ function Categories(props){
 
 function mapStateToProps(state){
   return {
-    products: state.products
+    products: state.root.products
   }
 }
 

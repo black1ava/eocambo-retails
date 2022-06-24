@@ -1,4 +1,4 @@
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
 
 import Product from '../../Shared/Product';
 import { globalStyles } from '../../styles/globalStyles';
@@ -19,7 +19,7 @@ function Products(props){
 
   return(
     <View>
-      <Text style={ globalStyles.title }>{ props.title }</Text>
+      <Text style={{ ...globalStyles.title, ...styles.title  }}>{ props.title }</Text>
         <FlatList 
           data={ props.products }
           renderItem={ renderProducts }
@@ -31,5 +31,11 @@ function Products(props){
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  title: {
+    marginVertical: 18
+  }
+});
 
 export default Products;

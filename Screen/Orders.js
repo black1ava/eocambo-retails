@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { View, Text, FlatList } from 'react-native';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import i18n from '../Translations';
 
 import NavBarScreenFrame from './Component/NavBarScreenFrame';
 import { globalStyles } from '../styles/globalStyles';
@@ -13,27 +14,30 @@ function Orders(props){
   const [loading, setLoading] = useState(false);
 
   const fromDrawer = props.route.params?.fromDrawer;
-  const user = useSelector(state => state.user);
+  const user = useSelector(state => state.root.user);
+  const orders = useSelector(state => state.root.orders);
+  const code = useSelector(state => state.root.code);
+
+  i18n.locale = code;
 
   useEffect(function(){
     
     async function getOrders(){
       try {
         setLoading(true);
-        const response = await axios.get(`https://pos.eocambo.com/api/order/searchSpecific/${ user.id }`);
-        const _response = await axios.get(`https://pos.eocambo.com/api/order/search/${ user.id }`);
-        const { data } = response.data;
-        const _data = _response.data.data;
-        
-        if(data !== [] && _data !== []){
-          data.forEach((d, i) => {
-            d.date = _data[i]?.created_at;
-            d.status = _data[i]?.status;
-          });
-        }
+        const orderResponse = await axios.get(`https://pos.eocambo.com/api/order/search/${ user.id }`);
+        const orders = orderResponse.data.data;
+        const orderDetailsResponse = await axios.get(`https://pos.eocambo.com/api/order/searchSpecific/${ user.id }`);
+        const orderDetails = orderDetailsResponse.data.data;
 
-        console.log("data", data);
-        setOrderProducts(data);
+        const orderProducts = orders.map(function(order){
+          return {
+            ...order,
+            products: orderDetails.filter(orderDetail => orderDetail.transaction_id === order.id)
+          };
+        });
+
+        setOrderProducts(orderProducts);
       }catch(err){
         console.log(err);
       }finally{
@@ -41,9 +45,11 @@ function Orders(props){
       }
     }
 
-    getOrders();
+    if(user != null){
+      getOrders();
+    }
 
-  }, []);
+  }, [user, orders]);
 
 
   const orderScreenMarkup = (
@@ -52,14 +58,14 @@ function Orders(props){
       renderItem={ ({ item }) => (
         <OrderCard 
           status={ item.status } 
-          date={ item.date } 
-          quantity={ item.quantity }
-          id={ item.transaction_id } 
-          name={ item.name } 
-          total={ Number(item.price) * Number(item.quantity) } 
+          date={ item.created_at } 
+          products={ item.products }
+          id={ item.id } 
+          total={ Number(item.total_before_tax) } 
+          navigation={ props.navigation }
         />
       )}
-      keyExtractor={ product => product.transaction_id }
+      keyExtractor={ order => order.id }
     />
   );
 
@@ -69,11 +75,11 @@ function Orders(props){
       screenName="orders" 
       loading={ loading }
       showNavbar={ !fromDrawer }
-      title="My orders"
+      title={ i18n.t('order.Your Orders') }
     >
       { orderProducts.length > 0 ? orderScreenMarkup : (
         <View style={ globalStyles.center}>
-          <Text style={ globalStyles.title }>No order history yet</Text>
+          <Text style={ globalStyles.title }>{ i18n.t('order.No order history yet')}</Text>
         </View>
       ) }
     </NavBarScreenFrame>

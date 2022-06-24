@@ -8,11 +8,13 @@ import {
   LogBox, 
   TextInput, 
   ScrollView,
-  Alert
+  Alert,
 } from 'react-native';
 import { Ionicons, Feather, MaterialIcons, AntDesign } from '@expo/vector-icons';
-import { globalStyles } from '../styles/globalStyles';
 import  { connect } from 'react-redux';
+import SnackBar from 'react-native-snackbar-component';
+
+import { globalStyles } from '../styles/globalStyles';
 import { 
   addToFavoriteActive, 
   addToFavoriteInactive, 
@@ -21,11 +23,14 @@ import {
 } from '../action';
 import axios from 'axios';
 import Spinner from './Component/Spinner';
+import i18n from '../Translations'
 
 function ProductDetails(props){
   const product = props.route.params;
   const { id } = product;
   const uid = props.user?.uid;
+  const email = props.user?.email;
+  const phone = props.user?.mobile
   
   const [isFavorite, setIsFavorite] = useState(product.favorite);
   const [productsInCart, setProductsInCart] = useState(0);
@@ -33,6 +38,11 @@ function ProductDetails(props){
   const [isSelected, setIsSelected] = useState(false);
   const [productInCartId, setProductInCartId] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showSnackBar, setShowSnackBar] = useState(false);
+  const [showInformationSnackBar, setShowInformationSnackBar] = useState(false);
+  
+
+  i18n.locale = props.code;
 
   LogBox.ignoreAllLogs();
 
@@ -50,7 +60,29 @@ function ProductDetails(props){
     setAmount(!!productInCart ? productInCart.amount : 1);
     setProductInCartId(productInCart?.id);
     setIsSelected(!!productInCart);
-  }, [props.productsInCart]);
+
+    let timeout;
+
+    if(showInformationSnackBar){
+      timeout = setTimeout(function(){
+        setShowInformationSnackBar(false);
+      }, 3000);
+    }
+
+    let checkoutTimeout;
+
+    if(showSnackBar){
+      checkoutTimeout = setTimeout(function(){
+        setShowSnackBar(false);
+      }, 3000)
+    }
+
+    return function(){
+      clearTimeout(timeout);
+      clearTimeout(checkoutTimeout);
+    }
+
+  }, [props.productsInCart, showInformationSnackBar, showSnackBar]);
 
   function handleAmountIncrease(){
     setAmount(amount => amount + 1);
@@ -73,11 +105,11 @@ function ProductDetails(props){
 
     if(props.user === null){
       Alert.alert(
-        'Sign In Required!',
-        'Please sign in before you can add this item to your favorite',
+        i18n.t('cart.Sign In Require'),
+        i18n.t('favorite.Please sign in before you can add this item to your favorite'),
         [
           {
-            text: 'Sign in',
+            text: i18n.t('profile.Sign In'),
             onPress: () => props.navigation.navigate('Login')
           }
         ]
@@ -103,11 +135,11 @@ function ProductDetails(props){
     
     if(props.user === null){
       Alert.alert(
-        'Sign In Required!',
-        'Please sign in before you can add this item to your favorite',
+        i18n.t('cart.Sign In Require'),
+        i18n.t('cart.Please sign in before you can add this product to cart'),
         [
           {
-            text: 'Sign in',
+            text: i18n.t('profile.Sign In'),
             onPress: () => props.navigation.navigate('Login')
           }
         ]
@@ -117,7 +149,21 @@ function ProductDetails(props){
     }
 
     if(!isSelected){
-      alert('Please select an option price');
+      Alert.alert(
+        i18n.t('productdetail.Please Select Option'),
+        i18n.t('productdetail.Option price must be select one required'),
+        [
+          {
+            text: i18n.t('checkout.Ok'),
+            onPress: () => {}
+          }
+        ]
+      );
+      return;
+    }
+
+    if(email === null && phone === null){
+      setShowInformationSnackBar(true);
       return;
     }
 
@@ -134,8 +180,7 @@ function ProductDetails(props){
     }
 
     setLoading(false);
-
-    props.navigation.navigate('Cart');
+    setShowSnackBar(true);
   }
 
   function handleNavigateToCart(){
@@ -177,14 +222,16 @@ function ProductDetails(props){
           </View>
           <View style={ styles.productBody }>
             <Text style={{ ...globalStyles.title, ...globalStyles.textRed }}>${ parseInt(product.price) }.00</Text>
-            <Text style={ globalStyles.textBold }>Description</Text>
+            <Text style={ globalStyles.textBold }>{ i18n.t('productdetail.Description' ) }</Text>
             <ScrollView showsVerticalScrollIndicator={ false }>
               <Text>{ product.description || 'null' }</Text>
             </ScrollView>
             <View>
               <View style={ styles.selectedOptionsHeader}>
-                <Text style={ globalStyles.textBold }>Select options</Text>
-                <Text style={ globalStyles.textBold}>01 required</Text>
+                <Text style={ globalStyles.textBold }>
+                  { i18n.t('productdetail.Select options') }
+                </Text>
+                <Text style={ globalStyles.textBold}>{ i18n.t('productdetail.1 REQUIRED')}</Text>
               </View>
               <View style={ styles.radioButton }>
                 <TouchableOpacity onPress={ handleIsSelected }>
@@ -200,7 +247,7 @@ function ProductDetails(props){
             </View>
             <View>
               <View style={ styles.instructions }>
-                <Text>Special instructions:</Text>
+                <Text>{ i18n.t('productdetail.Special instruction')}:</Text>
                 <View style={{ borderBottomWidth: 1, borderBottomColor: '#7F8487' }}>
                   <TextInput style={{ fontSize: 14}}/>
                 </View>
@@ -219,9 +266,21 @@ function ProductDetails(props){
               </View>
                 <TouchableOpacity style={ styles.addToCartButton } onPress={ handleAddToCart }>
                   <Text style={ styles.addToCartButtonText }>
-                    { !!productInCartId ? 'Update To Cart' : 'Add To Cart' }
+                    { !!productInCartId ? i18n.t('productdetail.Update') : i18n.t('productdetail.Add to cart') }
                   </Text>
                 </TouchableOpacity>
+                <SnackBar 
+                  visible={ showSnackBar } 
+                  textMessage={ i18n.t("productdetail.This item successful added to your cart") }
+                  actionText={ i18n.t("cart.Go to cart") }
+                  actionHandler={ () => props.navigation.navigate('Cart') }
+                />
+                <SnackBar 
+                  visible={ showInformationSnackBar }
+                  textMessage="Invalid contact info"
+                  actionText="Edit contact"
+                  actionHandler={ () => props.navigation.navigate('EditProfile') }
+                />
               </View>
             </View>
           </View>
@@ -232,6 +291,11 @@ function ProductDetails(props){
 }
 
 const styles = StyleSheet.create({
+  bottomSheet: {
+    backgroundColor: 'white',
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
   container: {
     flex:1,
   },
@@ -332,8 +396,9 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state){
   return {
-    productsInCart: state.productsInCart,
-    user: state.user
+    productsInCart: state.root.productsInCart,
+    user: state.root.user,
+    code: state.root.code
   };
 }
 

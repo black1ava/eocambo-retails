@@ -8,18 +8,24 @@ import axios from 'axios';
 import ScreenFrame from './Component/ScreenFrame';
 import Button from '../Shared/Button';
 import { updateProfile } from '../action';
+import i18n from '../Translations';
 
 const propTypes = {
   navigation: PropTypes.object.isRequired
 };
 
 function EditProfile({ navigation }){
-  const user = useSelector(state => state.user);
+  const user = useSelector(state => state.root.user);
+  const code = useSelector(state => state.root.code);
+
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
   const [phoneNumber, setPhoneNumber] = useState(user.mobile);
   const [isEditActive, setIsEditActive] = useState(false);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+
+  i18n.locale = code;
 
   const { id } = user;
 
@@ -41,6 +47,7 @@ function EditProfile({ navigation }){
 
   async function handleUpdateProfile(){
     try {
+      setLoading(true);
       await axios.post('https://pos.eocambo.com/api/contact/update', {
         id,
         email,
@@ -49,6 +56,7 @@ function EditProfile({ navigation }){
       });
       dispatch(updateProfile({ name, email, mobile: phoneNumber }));
       navigation.navigate('Me');
+      setLoading(false);
     }catch(err){
       console.log(error);
     }
@@ -57,20 +65,20 @@ function EditProfile({ navigation }){
   const contactInfoMarkup = isEditActive ? (
     <View style={ styles.edit }>
       <View>
-        <Text>Name</Text>
+        <Text>{ i18n.t('editprofile.Name')}</Text>
         <TextInput 
           style={ styles.input } 
           value={ name } 
           onChangeText={ handleNameChange } 
         />
-        <Text>Email</Text>
+        <Text>{ i18n.t('editprofile.Email') }</Text>
         <TextInput 
           style={ styles.input } 
           value={ email } 
           onChangeText={ handleEmailChange } 
           keyboardType="email-address"
         />
-        <Text>Phone </Text>
+        <Text>{ i18n.t('editprofile.Phone')}</Text>
         <TextInput 
           style={ styles.input } 
           value={ phoneNumber } 
@@ -79,7 +87,7 @@ function EditProfile({ navigation }){
         />
       </View>
       <Button 
-        title="Save changes" 
+        title={ i18n.t('editprofile.Save change') } 
         backgroundColor="#0AA1DD" 
         color="#fff" 
         onAction={ handleUpdateProfile }
@@ -96,14 +104,14 @@ function EditProfile({ navigation }){
   const editButtonMarkup = isEditActive ? (
     <Entypo name="cross" size={24} color="red" />
   ):(
-    <Text style={ styles.boldText }>Edit</Text>
+    <Text style={ styles.boldText }>{ i18n.t('editprofile.Edit') }</Text>
   );
 
   return (
-    <ScreenFrame navigation={ navigation } title="Edit profile">
+    <ScreenFrame navigation={ navigation } title={ i18n.t('editprofile.Edit Profile') } loading={ loading }>
       <View style={ styles.editProfileContainer }>
         <View style={ styles.editProfileHeader }>
-          <Text style={ styles.boldText }>Contact info</Text>
+          <Text style={ styles.boldText }>{ i18n.t('editprofile.Contact info')}</Text>
           <TouchableOpacity onPress={ handleEditToggle }>
             { editButtonMarkup }
           </TouchableOpacity>

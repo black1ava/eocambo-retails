@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import { View, Text, FlatList, SafeAreaView } from 'react-native';
+import { View, Text, FlatList, SafeAreaView, StyleSheet } from 'react-native';
 import 'react-native-get-random-values';
+import i18n from '../../Translations';
+
 import Category from '../../Shared/Category';
 import { globalStyles } from '../../styles/globalStyles'
 import Seperator from '../../Shared/Seperator';
@@ -35,7 +37,7 @@ function Categories(props){
 
   return(
     <View>
-      <Text style={ globalStyles.title }>Categories</Text>
+      <Text style={{ ...globalStyles.title, ...styles.title }}>{ i18n.t('home.Categories') }</Text>
       <SafeAreaView>
         <FlatList 
           data={ sortedCategories }
@@ -49,6 +51,12 @@ function Categories(props){
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  title: {
+    marginVertical: 18
+  }
+});
 
 
 export default Categories;

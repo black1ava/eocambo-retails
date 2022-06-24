@@ -7,7 +7,11 @@ const initialState= {
   total: 0,
   companyInfo: [],
   promotions: [],
-  loginAttempt: 0
+  loginAttempt: 0,
+  orders: [],
+  code: 'en',
+  orderType: [],
+  slides: [],
 };
 
 export default function reducer(state = initialState, action){
@@ -134,12 +138,7 @@ export default function reducer(state = initialState, action){
         case 'ORDER_PRODUCTS_IN_CART':
           return {
             ...state,
-            productsInCart: state.productsInCart.map(function(productInCart){
-              return {
-                ...productInCart,
-                order: true
-              }
-            })
+            productsInCart: []
           };
 
         case 'SET_COMPANY_INFO':
@@ -169,6 +168,33 @@ export default function reducer(state = initialState, action){
           return {
             ...state,
             loginAttempt: state.loginAttempt + 1
+          };
+
+        case 'ADD_ORDER':
+          return {
+            ...state,
+            orders: [
+              ...state.orders,
+              action.payload
+            ]
+          };
+
+        case 'CHANGE_LANGUAGE':
+          return {
+            ...state,
+            code: action.payload
+          }
+
+        case 'SET_ORDER_TYPE':
+          return {
+            ...state,
+            orderType: action.payload
+          }
+
+        case 'SET_SLIDES':
+          return {
+            ...state,
+            slides: action.payload
           };
 
     default:

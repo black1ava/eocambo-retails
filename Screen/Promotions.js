@@ -5,11 +5,15 @@ import PropTypes from 'prop-types';
 import { globalStyles } from '../styles/globalStyles';
 import NavBarScreenFrame from './Component/NavBarScreenFrame';
 import Promotion from './Component/Promotion';
+import i18n from '../Translations'
 
 function Promotions({ navigation, route }){
 
   const fromDrawer = route.params?.fromDrawer;
-  const promotions = useSelector(state => state.promotions);
+  const promotions = useSelector(state => state.root.promotions);
+  const code = useSelector(state => state.root.code);
+
+  i18n.locale = code;
 
   function renderPromotions({ item }){
     return (
@@ -44,7 +48,7 @@ function Promotions({ navigation, route }){
 
   return(
     <View style={ styles.container }>
-      <NavBarScreenFrame navigation={ navigation } title="Promotions" screenName="promotions" showNavbar={ !fromDrawer }>
+      <NavBarScreenFrame navigation={ navigation } title={ i18n.t('promotion.Promotion') } screenName="promotions" showNavbar={ !fromDrawer }>
         { promotionsMarkup }
       </NavBarScreenFrame>
     </View>

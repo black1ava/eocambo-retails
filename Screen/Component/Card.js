@@ -1,22 +1,44 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import { v4 as uuidv4 } from 'uuid';
 import { AntDesign } from '@expo/vector-icons';
+import PropTypes from 'prop-types';
 
 import { globalStyles } from '../../styles/globalStyles';
 
-function Card(props){
+const propTypes = {
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      items: PropTypes.arrayOf(
+        PropTypes.shape({
+          name: PropTypes.string,
+          text: PropTypes.shape({
+            value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+            color: PropTypes.string
+          })
+        })
+      )
+    })
+  ),
+  touchable: PropTypes.bool,
+  onPress: PropTypes.func,
+  onBottomSheetToggle: PropTypes.func,
+  bottomSheetActive: PropTypes.bool
+};
 
-  const componentMarkp = props.data.map(function(item){
+function Card({ data, touchable, onPress, onBottomSheetToggle, bottomSheetActive }){
+
+  const componentMarkp = data.map(function(item){
 
     const contentMarkup = item.items.map(function(item){
-      const dropdownIcon = props.bottomSheetActive ? (
+      const dropdownIcon = bottomSheetActive ? (
         <AntDesign name="up" size={18} color="red" />
       ) : (
         <AntDesign name="down" size={18} color="red" />
       );
 
       return item.text.dropdown ? (
-        <TouchableOpacity key={ uuidv4() } onPress={ props.onBottomSheetToggle }>
+        <TouchableOpacity key={ uuidv4() } onPress={ onBottomSheetToggle }>
           <View style={ styles.cardItem }>
             <Text>{ item.name }</Text>
             <View style={ styles.dropdown }>
@@ -43,16 +65,30 @@ function Card(props){
     )
   });
 
-  return (
-    <View style={ styles.container }>
+  const cartMarkup = touchable ? (
+    <TouchableOpacity onPress={ onPress }>
       <View style={ styles.card }>
         <ScrollView>
           { componentMarkp }
         </ScrollView>
       </View>
+    </TouchableOpacity>
+  ):(
+    <View style={ styles.card }>
+        <ScrollView>
+          { componentMarkp }
+        </ScrollView>
+      </View>
+  );
+
+  return (
+    <View style={ styles.container }>
+      { cartMarkup }
     </View>
   );
 }
+
+Card.propTypes = propTypes;
 
 const styles = StyleSheet.create({
   card: {

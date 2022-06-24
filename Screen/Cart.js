@@ -7,11 +7,13 @@ import ScreenFrame from './Component/ScreenFrame';
 import CartProduct from './Component/CartProduct';
 import { globalStyles } from '../styles/globalStyles';
 import Spinner from './Component/Spinner';
+import i18n from '../Translations';
 
 function Cart(props){
 
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false) 
+  const [loading, setLoading] = useState(false);
+  i18n.locale = props.code;
 
   useEffect(function(){
     
@@ -66,7 +68,7 @@ function Cart(props){
 
   const cartScreenMarkup = (
     <View style={{ flex: 1 }}>
-      <ScreenFrame navigation={ props.navigation } title="Cart"  hasSearch loading={ loading }>
+      <ScreenFrame navigation={ props.navigation } title={ i18n.t('cart.Your Cart') }  hasSearch loading={ loading }>
         <View style={{ flex: 1 }}>
           <View style={{ padding: 15, flex: 1 }}>
             <FlatList 
@@ -78,7 +80,7 @@ function Cart(props){
           <View style={ styles.priceContainer }>
             <View style={ styles.totalContainer }>
               <Text style={ styles.total }>
-                Total: 
+                { i18n.t('cart.Total') }: 
               </Text>
               <Text style={ styles.totalPrice }>
                 ${ props.total }.00
@@ -86,7 +88,7 @@ function Cart(props){
             </View>
             <View style={ styles.checkoutButton }>
               <TouchableOpacity>
-                <Text style={ styles.checkoutButtonText } onPress={ handleContinueToCart }>Continue To Checkout</Text>
+                <Text style={ styles.checkoutButtonText } onPress={ handleContinueToCart }>{ i18n.t('cart.Check Out')}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -99,9 +101,9 @@ function Cart(props){
     <>
     {
       products.length === 0 ? (
-        <ScreenFrame navigation={ props.navigation } title="Cart"  hasSearch hasGoToCart>
+        <ScreenFrame navigation={ props.navigation } title={ i18n.t('cart.Your Cart') }  hasSearch hasGoToCart>
           <View style={ globalStyles.center }>
-            <Text style={{ ...globalStyles.textBold, ...globalStyles.title }}>No item in cart</Text>
+            <Text style={{ ...globalStyles.textBold, ...globalStyles.title }}>{ i18n.t('cart.No items in cart') }</Text>
           </View>
         </ScreenFrame>
       ) :(
@@ -155,9 +157,10 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state){
   return {
-    productsInCart: state.productsInCart,
-    products: state.products,
-    total: state.total
+    productsInCart: state.root.productsInCart,
+    products: state.root.products,
+    total: state.root.total,
+    code: state.root.code
   };
 }
 

@@ -73,7 +73,8 @@ const styles = StyleSheet.create({
     borderColor: 'lightgrey',
     marginBottom: 10,
     borderRadius: 5,
-    position: 'relative'
+    position: 'relative',
+    padding: 5
   },
   name: {
     fontWeight: 'bold'

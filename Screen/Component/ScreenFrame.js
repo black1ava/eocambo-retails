@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-nativ
 import { Ionicons, AntDesign, Feather } from '@expo/vector-icons';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import { globalStyles } from '../../styles/globalStyles';
 import Spinner from './Spinner';
@@ -19,7 +20,9 @@ function ScreenFrame({
   searchText,
   onSearchTextChange,
   backgroundColor = '#FFCC8F',
-  loading
+  loading,
+  hasOrderType,
+  onOrderTypePress
 }){
 
   const [_productsInCart, set_ProductsInCart] = useState(0);
@@ -77,6 +80,12 @@ function ScreenFrame({
     </View>
   );
 
+  const orderTypeMarkup = hasOrderType && (
+    <TouchableOpacity onPress={ onOrderTypePress }>
+      <MaterialIcons name="location-pin" size={24} color="#0AA1DD" />
+    </TouchableOpacity>
+  )
+
   return(
     <View style={{ height: '100%' }}>
       <View style={{ ...styles.header, backgroundColor }}>
@@ -88,6 +97,7 @@ function ScreenFrame({
         <View style={ styles.row }>
           { hasSearch && searchButtonMarkup }
           { goToCartMarkUp }
+          { orderTypeMarkup }
         </View>
       </View>
       <View style={{ flex: 1 }}>
@@ -109,7 +119,9 @@ ScreenFrame.propTypes = {
   searchText: PropTypes.string,
   onSearchTextChange: PropTypes.func,
   backgroundColor: PropTypes.string,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  hasOrderType: PropTypes.bool,
+  onOrderTypePress: PropTypes.func
 };
 
 const styles = StyleSheet.create({
@@ -157,7 +169,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state){
   return {
-    productsInCart: state.productsInCart
+    productsInCart: state.root.productsInCart
   };
 }
 

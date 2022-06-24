@@ -101,3 +101,24 @@ export function updateProfile(payload){
 export function setLoginAttempt(){
   return { type: 'SET_LOGIN_ATTEMPT' };
 }
+
+export function changeLanguage(payload){
+  return {
+    type: 'CHANGE_LANGUAGE',
+    payload
+  };
+}
+
+export function setOrderType(payload){
+  return {
+    type: 'SET_ORDER_TYPE',
+    payload
+  }
+}
+
+export function setSlides(payload){
+  return {
+    type: 'SET_SLIDES',
+    payload
+  };
+}

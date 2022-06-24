@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux';
 import { BottomSheet } from 'react-native-btr';
 import { Ionicons,AntDesign } from '@expo/vector-icons';
@@ -8,17 +8,27 @@ import moment from 'moment';
 
 import Card from './Component/Card';
 import ScreenFrame from './Component/ScreenFrame';
+import i18n from '../Translations';
+import Modal from './Component/Modal';
+import Button from '../Shared/Button'
 
 
 function Checkout(props){
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
   const [payByCash, setPayBayCash] = useState(true);
+  const [orderId, setOrderId] = useState(null);
 
-  const productsInCart = useSelector(state => state.productsInCart);
-  const products = useSelector(state => state.products);
-  const user = useSelector(state => state.user);
-  const total = useSelector(state => state.total);
+  const productsInCart = useSelector(state => state.root.productsInCart);
+  const products = useSelector(state => state.root.products);
+  const user = useSelector(state => state.root.user);
+  const total = useSelector(state => state.root.total);
+  const code = useSelector(state => state.root.code);
+  i18n.locale = code;
+
   const [loading, setLoading] = useState(false);
+  const [orderTypeModalOpen, setOrderTypeModalOpen] = useState(false);
+
+  const orderType = useSelector(state => state.root.orderType);
 
   const _productsInCart = productsInCart.filter(function(productInCart){
     return !productInCart.order;
@@ -28,15 +38,15 @@ function Checkout(props){
 
   const userInfo = [
     {
-      key: 'Name',
+      key: i18n.t('checkout.Name'),
       value: user.name || user.name
     },
     {
-      key: 'Phone number',
+      key: i18n.t('checkout.Phone'),
       value: user.mobile || ''
     },
     {
-      key: 'Email',
+      key: i18n.t('checkout.Email'),
       value: user.email || ''
     }
   ];
@@ -57,14 +67,26 @@ function Checkout(props){
 
   function handlePayByCashPress(){
     setPayBayCash(true);
+    setBottomSheetVisible(false);
   }
 
   function handlePayByCardPress(){
     setPayBayCash(false);
+    setBottomSheetVisible(false);
+  }
+
+  function handleOrderTypeModalToggle(){
+    setOrderTypeModalOpen(state => !state);
   }
 
   async function handleNavigateToOrder(){
     setLoading(true);
+
+    if(orderId === null){
+      handleOrderTypeModalToggle();
+      setLoading(false);
+      return;
+    }
 
     const date = moment(new Date()).format('YYYY-MM-DD hh:mm:ss');
 
@@ -107,9 +129,8 @@ function Checkout(props){
       };
       return S4() + S4();
     }
-    
-    try {
-      await axios.post('https://pos.eocambo.com/api/checkout', {
+
+    const data = {
       "additional_notes": "",
       "business_id": "16",
       "buy_for_other_id": "",
@@ -178,11 +199,15 @@ function Checkout(props){
       "transaction_date": date,
       "transaction_type": "sell",
       "type": "sell",
-      "types_of_service_id": 16,
+      "types_of_service_id": orderId,
       "updated_at": date
-    });
+    }
+    
+    try {
+      await axios.post('https://pos.eocambo.com/api/checkout', data);
 
     dispatch({ type: 'ORDER_PRODUCTS_IN_CART' });
+    dispatch({ type: 'ADD_ORDER', data });
     setLoading(false);
     props.navigation.navigate('Orders');
     }catch(err){
@@ -221,34 +246,73 @@ function Checkout(props){
   );
 
 
+  const orderTypeSelection = orderType.map(function(type){
+    return (
+      <View key={ type.id }>
+        <TouchableOpacity onPress={ () => setOrderId(type.id) }>
+          <View style={ styles.orderSelection }>
+            <Text>{ type.name }</Text>
+            <Ionicons 
+              name={ `radio-button-${ orderId === type.id ? 'on' : 'off' }` } 
+              size={24} 
+              color="#0AA1DD" 
+            />
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  });
+
   return (
     <View>
-      <ScreenFrame title="Check-Out" navigation={ props.navigation } loading={ loading }>
+      <Modal active={ orderTypeModalOpen }>
+        <View>
+          <View style={ styles.modalHeader }>
+            <Text>{ i18n.t('checkout.Please select order type') }</Text>
+          </View>
+          <View>
+            { orderTypeSelection }
+          </View>
+          <Button 
+            backgroundColor="#0AA1DD" 
+            title={ i18n.t('settings.Apply') } 
+            color="#fff"
+            onAction={ handleOrderTypeModalToggle } 
+          />
+        </View>
+      </Modal>
+      <ScreenFrame 
+        title={ i18n.t('checkout.Check Out') } 
+        navigation={ props.navigation } 
+        loading={ loading } 
+        hasOrderType
+        onOrderTypePress={ handleOrderTypeModalToggle }
+      >
         <View style={{ flex: 1 }}>
           <Card 
             onBottomSheetToggle={ handleBottomSheetVisible }
             bottomSheetActive={ bottomSheetVisible }
             data={[
               {
-                title: 'Your order item',
+                title: i18n.t('order.Order items'),
                 items: productItems
               },
               {
-                title: 'Customer info',
+                title: i18n.t('checkout.contact info'),
                 items: userInfoItemsMarkUp
               },
               {
                 title: '',
                 items: [
                   {
-                    name: 'Delivery fee',
+                    name: i18n.t('checkout.Delivery Fee is'),
                     text: {
                       value: '$2.00',
                       color: 'red'
                     }
                   },
                   {
-                    name: 'Total(US)',
+                    name: i18n.t('checkout.Grand total'),
                     text: {
                       value: `$${ parseInt(total) + 2}.00`,
                       color: 'red',
@@ -257,7 +321,7 @@ function Checkout(props){
                 ]
               },
               {
-                title: 'Payment method',
+                title: i18n.t('checkout.Payment method'),
                 items: [
                   {
                     name: payByCash ? 'Pay by cash' : 'Pay by card',
@@ -273,7 +337,7 @@ function Checkout(props){
           />
           <View style={ styles.buttonContainer }>
             <TouchableOpacity style={ styles.button } onPress={ handleNavigateToOrder }>
-              <Text style={ styles.buttonText }>Order Now</Text>
+              <Text style={ styles.buttonText }>{ i18n.t('checkout.Order Now') }</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -355,6 +419,18 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '600',
     fontSize: 18
+  },
+  modalHeader: {
+    alignItems: 'center'
+  },
+  orderSelection: { 
+    marginVertical: 13, 
+    padding: 7, 
+    flexDirection: 'row', 
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderColor: '#0AA1DD',
+    borderRadius: 8
   }
 });
 

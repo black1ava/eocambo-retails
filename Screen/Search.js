@@ -6,10 +6,10 @@ import ScreenFrame from './Component/ScreenFrame';
 import CategoryProduct from '../Shared/CategoryProduct';
 
 function Search({ navigation }){
-  const productsInCart = useSelector(state => state.productsInCart);
+  const productsInCart = useSelector(state => state.root.productsInCart);
   const [searchText, setSearchText] = useState('');
   const [searchProducts, setSearchProducts] = useState([]);
-  const products = useSelector(state => state.products);
+  const products = useSelector(state => state.root.products);
   
   function handleSearchTextChange(value){
     setSearchText(value);

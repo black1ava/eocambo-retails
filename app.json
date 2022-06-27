@@ -23,6 +23,12 @@
       "bundleIdentifier": "com.blacklava.eocamboretail"
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
+      "config": {
+        "googleSignIn": {
+          "apiKey": "AIzaSyAZbQ6Oe5PRuI3R8C2uN1_CnY3fggI37hg"
+        }
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

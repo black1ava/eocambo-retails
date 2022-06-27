@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, Image, Text } from 'react-native';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import * as SplashScreen from 'expo-splash-screen';
@@ -32,7 +32,7 @@ function Home(props){
   useEffect(function(){
     onAuthStateChanged(Firebase.auth, async function(user){
       let uid = user === null ? 0 : user.providerData[0].uid;
-      if(user !== null){        
+      if(user !== null){       
         try {
           setLoading(true);
           const response = await axios.get(`https://pos.eocambo.com/api/customer/search/16/${ uid }`);
@@ -134,7 +134,6 @@ function Home(props){
       });
 
       props.setOrderType(orderType);
-
       setApiLoaded(true);
     });
   }, [
@@ -167,7 +166,11 @@ function Home(props){
   }, [apiLoaded]);
 
   if(!apiLoaded){
-    return null;
+    return (
+      <View style={{ flex: 1 }}>
+        <Image style={{ height: '100%', width: '100%' }} source={ require('./SplashScreen/splash.png') } />
+      </View>
+    );
   }
 
   return (

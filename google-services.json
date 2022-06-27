@@ -1,0 +1,43 @@
+{
+  "project_info": {
+    "project_number": "485406201376",
+    "project_id": "eocambo-retails",
+    "storage_bucket": "eocambo-retails.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:485406201376:android:38bd21c1bb250ae45ace45",
+        "android_client_info": {
+          "package_name": "com.blacklava.eocamboretail"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "485406201376-vqh3c5rvidov8pnue8ov17c9ot0k7j5r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.blacklava.eocamboretail",
+            "certificate_hash": "ce83d4a623a0142b856ca8aedda05c98ac098297"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZbQ6Oe5PRuI3R8C2uN1_CnY3fggI37hg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "485406201376-2j2ng3k9bm3a7ldnbdrolkh37rbrcokb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

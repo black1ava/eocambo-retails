@@ -19,7 +19,8 @@ import { useDispatch } from 'react-redux';
 
 import * as Firebase from '../firebase'
 import Button from '../Shared/Button';
-import { setLoginAttempt } from '../action'
+import { setLoginAttempt, setUser } from '../action';
+import Spinner from '../Screen/Component/Spinner';
 
 
 const app = Firebase.app;
@@ -32,6 +33,7 @@ function Login(props){
   const [otp, setOtp] = useState('');
   const [verificationModalVisible, setVerificationModalVisible] = useState(false);
   const recaptchaRef = useRef(null);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   const [facebookRequest, facebookResponse, facebookPromptAsync] = Facebook.useAuthRequest({
@@ -49,6 +51,7 @@ function Login(props){
         const { displayName, phoneNumber, uid } = user.providerData[0];
   
         try {
+          setLoading(true);
           await axios.post('https://pos.eocambo.com/api/contact/create', {
             "business_id": '16',
             "type": "customer",
@@ -63,8 +66,16 @@ function Login(props){
             "is_default": 0,
             "contact_status": "active"
           });
+
+          dispatch(setLoginAttempt);
+
+          const userResponse = await axios.get(`https://pos.eocambo.com/api/customer/search/16/${ uid }`);
+          const user = userResponse.data.data[0];
+          dispatch(setUser(user));
         }catch(err){
           console.error(err);
+        }finally{
+          setLoading(false);
         }
       }))
     });
@@ -94,7 +105,6 @@ function Login(props){
       await signInWithCredential(auth, credential);
       setPhoneNumber('');
       handleVerificationModalVisibleToggle();
-      props.navigation.navigate('Home');
       await login();
       props.navigation.navigate('Home');
     }catch(err){
@@ -193,6 +203,7 @@ function Login(props){
         visible={ verificationModalVisible }
       >
         <View style={ styles.modalContainer }>
+          <Spinner visible={ loading } />
           <View style={ styles.modalContent }>
             <Text style={ styles.modalTitle }>Verification code</Text>
             <View style={ styles.otpInput }>

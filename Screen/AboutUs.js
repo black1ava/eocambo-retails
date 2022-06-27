@@ -18,8 +18,6 @@ function AboutUs({ navigation }){
   const slides = useSelector(state => state.root.slides);
   const { facebook_link, email, mobile, google_map_link } = useSelector(state => state.root.companyInfo);
 
-  console.log(facebook_link, email, mobile, google_map_link);
-
   return (
     <ScreenFrame title={ i18n.t('drawer.About Us') } navigation={ navigation }>
       <View style={{ marginHorizontal: 15, marginVertical: 15 }}>
